@@ -1,9 +1,6 @@
 var c = document.getElementById("c");
 var ctx = c.getContext("2d");
 
-c.width = "500";
-c.height = "500";
-
 socket = io();
 var myId;
 

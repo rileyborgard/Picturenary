@@ -1,0 +1,8 @@
+#mydiv {
+    display: inline-block;
+    float: left;
+    background: gray;
+    width: 200px;
+    height: 500px;
+    word-wrap: break-word;
+}
