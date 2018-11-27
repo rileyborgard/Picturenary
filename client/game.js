@@ -21,7 +21,6 @@ setInterval(draw, 1000 / 60);
 
 socket.on('messages', function(data) {
     var messageBox = document.getElementById("messagebox");
-    messageBox.innerHTML = "";
     for(var i in data) {
         messageBox.innerHTML += data[i] + "<br>";
     }

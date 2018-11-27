@@ -24,8 +24,12 @@ io.sockets.on('connection', function(socket) {
 });
 
 setInterval(function() {
+    // send the first n messages, like a queue
+    var n = messages.length;
+    var messageData = messages.slice(0, n);
+    messages.splice(0, n);
     for(var id in sockets) {
         var socket = sockets[id];
-        socket.emit('messages', messages);
+        socket.emit('messages', messageData);
     }
 }, 1000/40);

@@ -20,16 +20,17 @@
 #guessinput {
     padding: 2px;
     outline: none;
-    border: solid #ccc 2px;
+    border: solid #666 2px;
     border-radius: 5px;
     width:94%;
+    height: 25px;
     box-sizing: border-box;
     margin:3%;
 }
 
 #messagebox {
     overflow-y: scroll;
-    height: 90%;
+    height: calc(100% - 40px);
     margin: 4px;
 }
 
