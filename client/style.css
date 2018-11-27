@@ -2,13 +2,14 @@
     position: relative;
     display: inline-block;
     float: left;
-    background: gray;
+    background: #ccc;
     width: 200px;
     height: 500px;
     word-wrap: break-word;
 }
 
 #inputbox {
+    margin-top: 4px;
     position: absolute;
     left: 0;
     width: 100%;
@@ -24,6 +25,12 @@
     width:94%;
     box-sizing: border-box;
     margin:3%;
+}
+
+#messagebox {
+    overflow-y: scroll;
+    height: 90%;
+    margin: 4px;
 }
 
 #guessinput:focus {

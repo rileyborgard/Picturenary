@@ -12,10 +12,20 @@ console.log('server started');
 var sockets = {};
 var io = require('socket.io')(serv, {});
 
+var messages = [];
+
 io.sockets.on('connection', function(socket) {
-    socket[socket.id] = socket;
+    sockets[socket.id] = socket;
     socket.emit('id', socket.id);
     socket.on('guess', function(data) {
         console.log(data);
+        messages.push(data);
     });
 });
+
+setInterval(function() {
+    for(var id in sockets) {
+        var socket = sockets[id];
+        socket.emit('messages', messages);
+    }
+}, 1000/40);
