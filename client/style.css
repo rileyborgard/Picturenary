@@ -1,8 +1,31 @@
-#mydiv {
+#chatbox {
+    position: relative;
     display: inline-block;
     float: left;
     background: gray;
     width: 200px;
     height: 500px;
     word-wrap: break-word;
+}
+
+#inputbox {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    bottom: 0;
+    text-align: center;
+}
+
+#guessinput {
+    padding: 2px;
+    outline: none;
+    border: solid #ccc 2px;
+    border-radius: 5px;
+    width:94%;
+    box-sizing: border-box;
+    margin:3%;
+}
+
+#guessinput:focus {
+    border-color: #6666ff;
 }
