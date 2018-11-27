@@ -18,3 +18,13 @@ function draw() {
 }
 
 setInterval(draw, 1000 / 60);
+
+
+var guessinput = document.getElementById("guessinput");
+guessinput.addEventListener('keydown', function(e) {
+    if(e.keyCode == 13) {
+        //enter key was pressed
+        socket.emit('guess', guessinput.value);
+        guessinput.value = "";
+    }
+});

@@ -15,4 +15,7 @@ var io = require('socket.io')(serv, {});
 io.sockets.on('connection', function(socket) {
     socket[socket.id] = socket;
     socket.emit('id', socket.id);
+    socket.on('guess', function(data) {
+        console.log(data);
+    });
 });
