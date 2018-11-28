@@ -1,10 +1,15 @@
+canvas {
+    border: solid black 2px;
+}
+
 #chatbox {
-    position: relative;
-    display: inline-block;
-    float: left;
+    position: fixed;
+    top: 1em;
+    right: 1em;
+    float: right;
     background: #ccc;
-    width: 200px;
-    height: 500px;
+    width: 350px;
+    height: calc(100% - 2em);
     word-wrap: break-word;
 }
 
@@ -30,7 +35,7 @@
 
 #messagebox {
     overflow-y: scroll;
-    height: calc(100% - 40px);
+    height: calc(100% - 40px - 1em);
     margin: 4px;
 }
 

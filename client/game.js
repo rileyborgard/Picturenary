@@ -14,7 +14,7 @@ socket.on('id', function(data) {
 function draw() {
     // clear screen
     ctx.fillStyle = "#fff";
-    ctx.fillRect(0, 0, 500, 500);
+    ctx.fillRect(0, 0, c.width, c.height);
 
     ctx.fillStyle = "#000";
     for(var i in drawPoints) {
