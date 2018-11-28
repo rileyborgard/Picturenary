@@ -2,6 +2,18 @@ canvas {
     border: solid black 2px;
 }
 
+#drawbox {
+    display:inline-block;
+    float:left;
+}
+
+#drawbox input {
+    outline: none;
+    border: solid black 2px;
+    border-radius: 4px;
+    padding: 5px;
+}
+
 #chatbox {
     position: fixed;
     top: 1em;
