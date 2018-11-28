@@ -22,7 +22,7 @@ io.sockets.on('connection', function(socket) {
         console.log(data);
         messages.push(data);
     });
-    socket.on('click', function(data) {
+    socket.on('draw', function(data) {
         drawpoints.push(data);
     });
 });
