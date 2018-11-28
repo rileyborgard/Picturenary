@@ -1,4 +1,4 @@
-// server garbege
+// server garbage
 var express = require('express');
 var app = express();
 var serv = require('http').Server(app);
@@ -13,6 +13,7 @@ var sockets = {};
 var io = require('socket.io')(serv, {});
 
 var messages = [];
+var drawpoints = [];
 
 io.sockets.on('connection', function(socket) {
     sockets[socket.id] = socket;
@@ -20,6 +21,9 @@ io.sockets.on('connection', function(socket) {
     socket.on('guess', function(data) {
         console.log(data);
         messages.push(data);
+    });
+    socket.on('click', function(data) {
+        drawpoints.push(data);
     });
 });
 
@@ -31,5 +35,6 @@ setInterval(function() {
     for(var id in sockets) {
         var socket = sockets[id];
         socket.emit('messages', messageData);
+        socket.emit('drawing', drawpoints);
     }
 }, 1000/40);
