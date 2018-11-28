@@ -5,6 +5,7 @@ ctx.imageSmoothingEnabled = false;
 socket = io();
 var myId;
 var drawPoints;
+var thickness = 1;
 
 socket.on('id', function(data) {
     myId = data;
@@ -19,11 +20,15 @@ function draw() {
     ctx.fillStyle = "#000";
     for(var i in drawPoints) {
         if(drawPoints[i].type == 'click') {
-            ctx.fillRect(c.width * drawPoints[i].x, c.height * drawPoints[i].y + 0.5, 1, 1);
+            ctx.beginPath();
+            ctx.arc(c.width * drawPoints[i].x, c.height * drawPoints[i].y, c.width * drawPoints[i].lineWidth / 2, 0, 2 * Math.PI, false);
+            ctx.fill();
+
+            //ctx.fillRect(c.width * drawPoints[i].x, c.height * drawPoints[i].y + 0.5, drawPoints[i].lineWidth, drawPoints[i].lineWidth);
             //ctx.fillRect(Math.round(c.width * drawPoints[i].x), Math.round(c.height * drawPoints[i].y) + 0.5, 1, 1);
         }else if(drawPoints[i].type == 'drag' && i > 0) {
             ctx.beginPath();
-            ctx.lineWidth = 1;
+            ctx.lineWidth = c.width * drawPoints[i].lineWidth;
             ctx.lineJoin = ctx.lineCap = 'round';
             //ctx.moveTo(Math.round(c.width * drawPoints[i - 1].x), Math.round(c.height * drawPoints[i - 1].y) + 0.5);
             //ctx.lineTo(Math.round(c.width * drawPoints[i].x), Math.round(c.height * drawPoints[i].y) + 0.5);
@@ -36,6 +41,21 @@ function draw() {
 
 setInterval(draw, 1000 / 60);
 
+// buttons
+document.getElementById('thickness1').onclick = function() {
+    thickness = 1;
+};
+document.getElementById('thickness2').onclick = function() {
+    thickness = 2;
+};
+document.getElementById('thickness3').onclick = function() {
+    thickness = 3;
+};
+document.getElementById('trashbutton').onclick = function() {
+    socket.emit('clear', {});
+}
+
+// incoming data
 socket.on('messages', function(data) {
     var messageBox = document.getElementById("messagebox");
     for(var i in data) {
@@ -46,6 +66,7 @@ socket.on('drawing', function(data) {
     drawPoints = data;
 });
 
+// events
 var guessinput = document.getElementById("guessinput");
 guessinput.addEventListener('keydown', function(e) {
     if(e.keyCode == 13) {
@@ -71,6 +92,7 @@ c.addEventListener('mousedown', function(e) {
         type: 'click',
         x: mx,
         y: my,
+        thickness: thickness,
     });
 });
 c.addEventListener('mousemove', function(e) {
@@ -81,6 +103,7 @@ c.addEventListener('mousemove', function(e) {
             type: 'drag',
             x: mx,
             y: my,
+            thickness: thickness,
         });
     }
 });

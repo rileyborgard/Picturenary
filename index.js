@@ -14,6 +14,7 @@ var io = require('socket.io')(serv, {});
 
 var messages = [];
 var drawpoints = [];
+var lineWidth = [1.0 / 500, 4.0 / 500, 10.0 / 500];
 
 io.sockets.on('connection', function(socket) {
     sockets[socket.id] = socket;
@@ -23,7 +24,11 @@ io.sockets.on('connection', function(socket) {
         messages.push(data);
     });
     socket.on('draw', function(data) {
+        data.lineWidth = lineWidth[data.thickness - 1];
         drawpoints.push(data);
+    });
+    socket.on('clear', function(data) {
+        drawpoints = [];
     });
 });
 
