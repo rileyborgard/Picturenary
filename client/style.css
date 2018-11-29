@@ -14,13 +14,21 @@ canvas {
     padding: 5px;
     background: white;
 }
-#drawbox .colorbutton {
+.colorbutton {
     outline: none;
     border: solid black 2px;
     border-radius: 4px;
     background: white;
+    width: 32px;
+    height: 32px;
+}
+
+.colorcontainer {
+    display: inline-flex;
     width: 46px;
     height: 46px;
+    align-items: center;
+    justify-content: center;
 }
 
 #chatbox {

@@ -7,6 +7,8 @@ var myId;
 var drawPoints;
 var thickness = 1;
 var color = 'black';
+var colors = ['black', 'white', 'red', 'yellow', 'green', 'blue'];
+var colorButtons = ['blackbutton', 'whitebutton', 'redbutton', 'yellowbutton', 'greenbutton', 'bluebutton'];
 
 socket.on('id', function(data) {
     myId = data;
@@ -57,12 +59,22 @@ document.getElementById('thickness3').onclick = function() {
 document.getElementById('trashbutton').onclick = function() {
     socket.emit('clear', {});
 }
-document.getElementById('blackbutton').onclick = function() { color = 'black'; };
-document.getElementById('whitebutton').onclick = function() { color = 'white'; };
-document.getElementById('redbutton').onclick = function() { color = 'red'; };
-document.getElementById('yellowbutton').onclick = function() { color = 'yellow'; };
-document.getElementById('greenbutton').onclick = function() { color = 'green'; };
-document.getElementById('bluebutton').onclick = function() { color = 'blue'; };
+
+var setColor = function(newColor) {
+    var lastColorButton = document.getElementById(color + 'button');
+    lastColorButton.style.width = '32px';
+    lastColorButton.style.height = '32px';
+    color = newColor;
+    lastColorButton = document.getElementById(color + 'button');
+    lastColorButton.style.width = '46px';
+    lastColorButton.style.height = '46px';
+}
+document.getElementById('blackbutton').onclick = function() { setColor('black'); };
+document.getElementById('whitebutton').onclick = function() { setColor('white'); };
+document.getElementById('redbutton').onclick = function() { setColor('red'); };
+document.getElementById('yellowbutton').onclick = function() { setColor('yellow'); };
+document.getElementById('greenbutton').onclick = function() { setColor('green'); };
+document.getElementById('bluebutton').onclick = function() { setColor('blue'); };
 
 // incoming data
 socket.on('messages', function(data) {
