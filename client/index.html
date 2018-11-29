@@ -5,45 +5,53 @@
 </head>
 <body>
 
-    <div id="userbox">
-        <div class="user">
-            abcdefghijklmno<br>
-            Score: 100
+    <div id="gamecontentbox" style="display:none;">
+        <div id="userbox">
+            <div class="user">
+                abcdefghijklmno<br>
+                Score: 100
+            </div>
+            <div class="user">
+                abcdefghijklmno<br>
+                Score: 100
+            </div>
+            <div class="user">
+                abcdefghijklmno<br>
+                Score: 100
+            </div>
         </div>
-        <div class="user">
-            abcdefghijklmno<br>
-            Score: 100
+
+        <div id="drawbox">
+            <canvas id="c" width="450" height="450"></canvas><br>
+            <input class="imgbutton" type="image" src="client/pencil.png" width="32" height="32"/>
+            <input class="imgbutton" type="image" src="client/eraser.png" width="32" height="32"/>
+            <input class="imgbutton" id="thickness1" type="image" src="client/thickness1.png" width="32" height="32"/>
+            <input class="imgbutton" id="thickness2" type="image" src="client/thickness2.png" width="32" height="32"/>
+            <input class="imgbutton" id="thickness3" type="image" src="client/thickness3.png" width="32" height="32"/>
+            <input class="imgbutton" id="trashbutton" type="image" src="client/trash.png" width="32" height="32"/>
+            <input class="imgbutton" id="undo" type="image" src="client/undo.png" width="32" height="32"/>
+            <br>
+            <div class="colorcontainer"><input class="colorbutton" id="blackbutton" type="button" style="background:black; width:46px; height:46px;"/></div>
+            <div class="colorcontainer"><input class="colorbutton" id="whitebutton" type="button" style="background:white;"/></div>
+            <div class="colorcontainer"><input class="colorbutton" id="redbutton" type="button" style="background:red;"/></div>
+            <div class="colorcontainer"><input class="colorbutton" id="yellowbutton" type="button" style="background:yellow;"/></div>
+            <div class="colorcontainer"><input class="colorbutton" id="greenbutton" type="button" style="background:green;"/></div>
+            <div class="colorcontainer"><input class="colorbutton" id="bluebutton" type="button" style="background:blue;"/></div>
         </div>
-        <div class="user">
-            abcdefghijklmno<br>
-            Score: 100
+
+        <div id="chatbox">
+            <div id="messagebox">
+            </div>
+            <div id="inputbox">
+                <input type="text" id="guessinput"/>
+            </div>
         </div>
     </div>
 
-    <div id="drawbox">
-        <canvas id="c" width="450" height="450"></canvas><br>
-        <input class="imgbutton" type="image" src="client/pencil.png" width="32" height="32"/>
-        <input class="imgbutton" type="image" src="client/eraser.png" width="32" height="32"/>
-        <input class="imgbutton" id="thickness1" type="image" src="client/thickness1.png" width="32" height="32"/>
-        <input class="imgbutton" id="thickness2" type="image" src="client/thickness2.png" width="32" height="32"/>
-        <input class="imgbutton" id="thickness3" type="image" src="client/thickness3.png" width="32" height="32"/>
-        <input class="imgbutton" id="trashbutton" type="image" src="client/trash.png" width="32" height="32"/>
-        <input class="imgbutton" id="undo" type="image" src="client/undo.png" width="32" height="32"/>
-        <br>
-        <div class="colorcontainer"><input class="colorbutton" id="blackbutton" type="button" style="background:black; width:46px; height:46px;"/></div>
-        <div class="colorcontainer"><input class="colorbutton" id="whitebutton" type="button" style="background:white;"/></div>
-        <div class="colorcontainer"><input class="colorbutton" id="redbutton" type="button" style="background:red;"/></div>
-        <div class="colorcontainer"><input class="colorbutton" id="yellowbutton" type="button" style="background:yellow;"/></div>
-        <div class="colorcontainer"><input class="colorbutton" id="greenbutton" type="button" style="background:green;"/></div>
-        <div class="colorcontainer"><input class="colorbutton" id="bluebutton" type="button" style="background:blue;"/></div>
-    </div>
-
-    <div id="chatbox">
-        <div id="messagebox">
-        </div>
-        <div id="inputbox">
-            <input type="text" id="guessinput"/>
-        </div>
+    <div id="entergamebox">
+        <img src="client/logo.png"/><br>
+        <input id="nameinput" type="text" placeholder="Name"/><br>
+        <input id="enterguestbutton" type="button" value="Enter as guest"/>
     </div>
 
 	<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
