@@ -26,11 +26,18 @@ var enterGame = function() {
         socket.on('messages', function(data) {
             var messageBox = document.getElementById("messagebox");
             for(var i in data) {
-                messageBox.innerHTML += data[i] + "<br>";
+                messageBox.innerHTML += data[i].name + ": " + data[i].text + "<br>";
             }
         });
         socket.on('drawing', function(data) {
             drawPoints = data;
+        });
+        socket.on('players', function(data) {
+            var userBox = document.getElementById('userbox');
+            userBox.innerHTML = "";
+            for(var i in data) {
+                userBox.innerHTML += '<div class="user">' + data[i] + '<br>Score: 100</div>';
+            }
         });
     });
 }
@@ -124,7 +131,10 @@ guessinput.addEventListener('keydown', function(e) {
     if(e.keyCode == 13) {
         //enter key was pressed
         if(socket) {
-            socket.emit('guess', guessinput.value);
+            socket.emit('guess', {
+                text: guessinput.value,
+                name: 'Jim',
+            });
         }
         guessinput.value = "";
     }

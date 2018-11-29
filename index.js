@@ -10,6 +10,8 @@ serv.listen(process.env.PORT || 2000, '0.0.0.0');
 console.log('server started');
 
 var sockets = {};
+
+var updatePlayers = false;
 var players = {};
 var io = require('socket.io')(serv, {});
 
@@ -31,11 +33,18 @@ io.sockets.on('connection', function(socket) {
     socket.on('enterGame', function(enterData) {
         sockets[socket.id] = socket;
         players[socket.id] = enterData.name;
+        updatePlayers = true;
 
         socket.emit('enterGame', {});
         socket.emit('id', socket.id);
+
+        socket.on('disconnect', function() {
+            delete players[socket.id];
+            delete sockets[socket.id];
+            updatePlayers = true;
+        });
         socket.on('guess', function(data) {
-            console.log(data);
+            data.name = players[socket.id];
             messages.push(data);
         });
         socket.on('draw', function(data) {
@@ -58,5 +67,9 @@ setInterval(function() {
         var socket = sockets[id];
         socket.emit('messages', messageData);
         socket.emit('drawing', drawpoints);
+        if(updatePlayers) {
+            socket.emit('players', players);
+        }
     }
+    updatePlayers = false;
 }, 1000/40);
