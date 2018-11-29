@@ -44,6 +44,12 @@ var enterGame = function() {
                     userBox.innerHTML += '<div class="user"><b>' + players[i].name + '</b><br>Score: ' + players[i].score + '</div>';
                 }
             }
+            var toolbox = document.getElementById('toolbox');
+            if(socket && socket.id == drawerId) {
+                toolbox.style.display = "";
+            }else {
+                toolbox.style.display = "none";
+            }
         });
         socket.on('drawerId', function(data) {
 
