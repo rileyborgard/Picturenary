@@ -1,10 +1,31 @@
+
 canvas {
     border: solid black 2px;
+    border-radius: 4px;
 }
 
 #drawbox {
+    border: solid black 2px;
+    border-radius: 4px;
+    padding: 5px;
+    margin-left: 5px;
+    background: #ccffcc;
     display:inline-block;
     float:left;
+}
+
+#userbox {
+    width: 200px;
+    display: inline-block;
+    float: left;
+}
+
+.user {
+    border: solid black 2px;
+    border-radius: 4px;
+    padding: 5px;
+    margin-bottom: 5px;
+    background: #ccccff;
 }
 
 .imgbutton {
@@ -39,6 +60,8 @@ canvas {
 }
 
 #chatbox {
+    border: solid black 2px;
+    border-radius: 4px;
     position: fixed;
     top: 1em;
     right: 1em;
@@ -72,7 +95,7 @@ canvas {
 #messagebox {
     overflow-y: scroll;
     height: calc(100% - 40px - 1em);
-    margin: 4px;
+    margin: 5px;
 }
 
 #guessinput:focus {
