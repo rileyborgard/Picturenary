@@ -6,6 +6,7 @@ socket = io();
 var myId;
 var drawPoints;
 var thickness = 1;
+var color = 'black';
 
 socket.on('id', function(data) {
     myId = data;
@@ -21,6 +22,7 @@ function draw() {
     for(var i in drawPoints) {
         if(drawPoints[i].type == 'click') {
             ctx.beginPath();
+            ctx.fillStyle = drawPoints[i].color;
             ctx.arc(c.width * drawPoints[i].x, c.height * drawPoints[i].y, c.width * drawPoints[i].lineWidth / 2, 0, 2 * Math.PI, false);
             ctx.fill();
 
@@ -28,6 +30,7 @@ function draw() {
             //ctx.fillRect(Math.round(c.width * drawPoints[i].x), Math.round(c.height * drawPoints[i].y) + 0.5, 1, 1);
         }else if(drawPoints[i].type == 'drag' && i > 0) {
             ctx.beginPath();
+            ctx.strokeStyle = drawPoints[i].color;
             ctx.lineWidth = c.width * drawPoints[i].lineWidth;
             ctx.lineJoin = ctx.lineCap = 'round';
             //ctx.moveTo(Math.round(c.width * drawPoints[i - 1].x), Math.round(c.height * drawPoints[i - 1].y) + 0.5);
@@ -54,6 +57,12 @@ document.getElementById('thickness3').onclick = function() {
 document.getElementById('trashbutton').onclick = function() {
     socket.emit('clear', {});
 }
+document.getElementById('blackbutton').onclick = function() { color = 'black'; };
+document.getElementById('whitebutton').onclick = function() { color = 'white'; };
+document.getElementById('redbutton').onclick = function() { color = 'red'; };
+document.getElementById('yellowbutton').onclick = function() { color = 'yellow'; };
+document.getElementById('greenbutton').onclick = function() { color = 'green'; };
+document.getElementById('bluebutton').onclick = function() { color = 'blue'; };
 
 // incoming data
 socket.on('messages', function(data) {
@@ -93,6 +102,7 @@ c.addEventListener('mousedown', function(e) {
         x: mx,
         y: my,
         thickness: thickness,
+        color: color,
     });
 });
 c.addEventListener('mousemove', function(e) {
@@ -104,6 +114,7 @@ c.addEventListener('mousemove', function(e) {
             x: mx,
             y: my,
             thickness: thickness,
+            color: color,
         });
     }
 });

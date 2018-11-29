@@ -7,11 +7,20 @@ canvas {
     float:left;
 }
 
-#drawbox input {
+#drawbox .imgbutton {
     outline: none;
     border: solid black 2px;
     border-radius: 4px;
     padding: 5px;
+    background: white;
+}
+#drawbox .colorbutton {
+    outline: none;
+    border: solid black 2px;
+    border-radius: 4px;
+    background: white;
+    width: 46px;
+    height: 46px;
 }
 
 #chatbox {
