@@ -2,7 +2,7 @@ var c = document.getElementById("c");
 var ctx = c.getContext("2d");
 ctx.imageSmoothingEnabled = false;
 
-socket = io();
+var socket;
 var myId;
 var drawPoints;
 var thickness = 1;
@@ -10,9 +10,30 @@ var color = 'black';
 var colors = ['black', 'white', 'red', 'yellow', 'green', 'blue'];
 var colorButtons = ['blackbutton', 'whitebutton', 'redbutton', 'yellowbutton', 'greenbutton', 'bluebutton'];
 
-socket.on('id', function(data) {
-    myId = data;
-});
+var enterGame = function() {
+    socket = io();
+    socket.emit('enterGame', {
+        name: document.getElementById('nameinput').value,
+    });
+    socket.on('enterGame', function(enterData) {
+        document.getElementById('entergamebox').style.display = 'none';
+        document.getElementById('gamecontentbox').style.display = "";
+
+        socket.on('id', function(data) {
+            myId = data;
+        });
+        // incoming data
+        socket.on('messages', function(data) {
+            var messageBox = document.getElementById("messagebox");
+            for(var i in data) {
+                messageBox.innerHTML += data[i] + "<br>";
+            }
+        });
+        socket.on('drawing', function(data) {
+            drawPoints = data;
+        });
+    });
+}
 
 // function to draw to the screen
 function draw() {
@@ -64,12 +85,19 @@ document.getElementById('thickness2').onclick = function() {
 document.getElementById('thickness3').onclick = function() {
     setThickness(3);
 };
+// buttons that communicate with server
 document.getElementById('trashbutton').onclick = function() {
-    socket.emit('clear', {});
+    if(socket) {
+        socket.emit('clear', {});
+    }
 }
 document.getElementById('undo').onclick = function() {
-    socket.emit('undo', {});
+    if(socket) {
+        socket.emit('undo', {});
+    }
 };
+
+document.getElementById('enterguestbutton').onclick = enterGame;
 
 var setColor = function(newColor) {
     var lastColorButton = document.getElementById(color + 'button');
@@ -90,23 +118,14 @@ document.getElementById('bluebutton').onclick = function() { setColor('blue'); }
 setColor('black');
 setThickness(1);
 
-// incoming data
-socket.on('messages', function(data) {
-    var messageBox = document.getElementById("messagebox");
-    for(var i in data) {
-        messageBox.innerHTML += data[i] + "<br>";
-    }
-});
-socket.on('drawing', function(data) {
-    drawPoints = data;
-});
-
 // events
 var guessinput = document.getElementById("guessinput");
 guessinput.addEventListener('keydown', function(e) {
     if(e.keyCode == 13) {
         //enter key was pressed
-        socket.emit('guess', guessinput.value);
+        if(socket) {
+            socket.emit('guess', guessinput.value);
+        }
         guessinput.value = "";
     }
 });
@@ -123,24 +142,28 @@ c.addEventListener('mousedown', function(e) {
     mousedown = true;
     var mx = 1.0 * e.offsetX / c.width;
     var my = 1.0 * e.offsetY / c.height;
+    if(socket) {
     socket.emit('draw', {
-        type: 'click',
-        x: mx,
-        y: my,
-        thickness: thickness,
-        color: color,
-    });
-});
-c.addEventListener('mousemove', function(e) {
-    if(mousedown) {
-        var mx = 1.0 * e.offsetX / c.width;
-        var my = 1.0 * e.offsetY / c.height;
-        socket.emit('draw', {
-            type: 'drag',
+            type: 'click',
             x: mx,
             y: my,
             thickness: thickness,
             color: color,
         });
+    }
+});
+c.addEventListener('mousemove', function(e) {
+    if(mousedown) {
+        var mx = 1.0 * e.offsetX / c.width;
+        var my = 1.0 * e.offsetY / c.height;
+        if(socket) {
+        socket.emit('draw', {
+                type: 'drag',
+                x: mx,
+                y: my,
+                thickness: thickness,
+                color: color,
+            });
+        }
     }
 });

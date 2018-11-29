@@ -1,6 +1,5 @@
 
 body {
-
     background-image: url("background.png");
 }
 
@@ -18,6 +17,7 @@ body {
     padding: 5px;
 }
 #enterguestbutton {
+    cursor: pointer;
     margin-top: 10px;
     outline: none;
     border: solid black 2px;

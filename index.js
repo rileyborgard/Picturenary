@@ -10,6 +10,7 @@ serv.listen(process.env.PORT || 2000, '0.0.0.0');
 console.log('server started');
 
 var sockets = {};
+var players = {};
 var io = require('socket.io')(serv, {});
 
 var messages = [];
@@ -27,20 +28,25 @@ var onUndo = function(data) {
 }
 
 io.sockets.on('connection', function(socket) {
-    sockets[socket.id] = socket;
-    socket.emit('id', socket.id);
-    socket.on('guess', function(data) {
-        console.log(data);
-        messages.push(data);
+    socket.on('enterGame', function(enterData) {
+        sockets[socket.id] = socket;
+        players[socket.id] = enterData.name;
+
+        socket.emit('enterGame', {});
+        socket.emit('id', socket.id);
+        socket.on('guess', function(data) {
+            console.log(data);
+            messages.push(data);
+        });
+        socket.on('draw', function(data) {
+            data.lineWidth = lineWidth[data.thickness - 1];
+            drawpoints.push(data);
+        });
+        socket.on('clear', function(data) {
+            drawpoints = [];
+        });
+        socket.on('undo', onUndo);
     });
-    socket.on('draw', function(data) {
-        data.lineWidth = lineWidth[data.thickness - 1];
-        drawpoints.push(data);
-    });
-    socket.on('clear', function(data) {
-        drawpoints = [];
-    });
-    socket.on('undo', onUndo);
 });
 
 setInterval(function() {
