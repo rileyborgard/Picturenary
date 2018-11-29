@@ -59,6 +59,9 @@ document.getElementById('thickness3').onclick = function() {
 document.getElementById('trashbutton').onclick = function() {
     socket.emit('clear', {});
 }
+document.getElementById('undo').onclick = function() {
+    socket.emit('undo', {});
+};
 
 var setColor = function(newColor) {
     var lastColorButton = document.getElementById(color + 'button');

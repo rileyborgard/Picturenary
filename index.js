@@ -16,6 +16,16 @@ var messages = [];
 var drawpoints = [];
 var lineWidth = [1.0 / 500, 4.0 / 500, 10.0 / 500];
 
+var onUndo = function(data) {
+    var i = drawpoints.length - 1;
+    for(; i >= 0; i--) {
+        if(drawpoints[i].type != 'drag') {
+            break;
+        }
+    }
+    drawpoints.splice(i);
+}
+
 io.sockets.on('connection', function(socket) {
     sockets[socket.id] = socket;
     socket.emit('id', socket.id);
@@ -30,6 +40,7 @@ io.sockets.on('connection', function(socket) {
     socket.on('clear', function(data) {
         drawpoints = [];
     });
+    socket.on('undo', onUndo);
 });
 
 setInterval(function() {
