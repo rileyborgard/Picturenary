@@ -12,7 +12,9 @@ console.log('server started');
 var sockets = {};
 
 var updatePlayers = false;
+var Player = require('./server/player.js');
 var players = {};
+var drawerId = null;
 var io = require('socket.io')(serv, {});
 
 var messages = [];
@@ -31,8 +33,11 @@ var onUndo = function(data) {
 
 io.sockets.on('connection', function(socket) {
     socket.on('enterGame', function(enterData) {
+        if(drawerId == null) {
+            drawerId = socket.id;
+        }
         sockets[socket.id] = socket;
-        players[socket.id] = enterData.name;
+        players[socket.id] = Player(enterData.name);
         updatePlayers = true;
 
         socket.emit('enterGame', {});
@@ -41,15 +46,25 @@ io.sockets.on('connection', function(socket) {
         socket.on('disconnect', function() {
             delete players[socket.id];
             delete sockets[socket.id];
+
+            if(drawerId == socket.id) {
+                drawerId = null;
+                for(var i in players) {
+                    drawerId = i;
+                    break;
+                }
+            }
             updatePlayers = true;
         });
         socket.on('guess', function(data) {
-            data.name = players[socket.id];
+            data.name = players[socket.id].name;
             messages.push(data);
         });
         socket.on('draw', function(data) {
-            data.lineWidth = lineWidth[data.thickness - 1];
-            drawpoints.push(data);
+            if(socket.id == drawerId) {
+                data.lineWidth = lineWidth[data.thickness - 1];
+                drawpoints.push(data);
+            }
         });
         socket.on('clear', function(data) {
             drawpoints = [];
@@ -68,7 +83,10 @@ setInterval(function() {
         socket.emit('messages', messageData);
         socket.emit('drawing', drawpoints);
         if(updatePlayers) {
-            socket.emit('players', players);
+            socket.emit('players', {
+                players: players,
+                drawerId: drawerId,
+            });
         }
     }
     updatePlayers = false;

@@ -26,7 +26,7 @@ var enterGame = function() {
         socket.on('messages', function(data) {
             var messageBox = document.getElementById("messagebox");
             for(var i in data) {
-                messageBox.innerHTML += data[i].name + ": " + data[i].text + "<br>";
+                messageBox.innerHTML += '<b>' + data[i].name + "</b>: " + data[i].text + "<br>";
             }
         });
         socket.on('drawing', function(data) {
@@ -34,10 +34,19 @@ var enterGame = function() {
         });
         socket.on('players', function(data) {
             var userBox = document.getElementById('userbox');
+            var players = data.players;
+            var drawerId = data.drawerId;
             userBox.innerHTML = "";
-            for(var i in data) {
-                userBox.innerHTML += '<div class="user">' + data[i] + '<br>Score: 100</div>';
+            for(var i in players) {
+                if(i == drawerId) {
+                    userBox.innerHTML += '<div class="user"><img src="client/pencil.png" width="16px" height="16px"><b>' + players[i].name + '</b><br>Score: ' + players[i].score + '</div>';
+                }else {
+                    userBox.innerHTML += '<div class="user"><b>' + players[i].name + '</b><br>Score: ' + players[i].score + '</div>';
+                }
             }
+        });
+        socket.on('drawerId', function(data) {
+
         });
     });
 }
