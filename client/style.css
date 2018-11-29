@@ -7,13 +7,17 @@ canvas {
     float:left;
 }
 
-#drawbox .imgbutton {
+.imgbutton {
     outline: none;
     border: solid black 2px;
     border-radius: 4px;
     padding: 5px;
     background: white;
 }
+.imgbutton:hover {
+    background: #ccffff;
+}
+
 .colorbutton {
     outline: none;
     border: solid black 2px;
@@ -21,6 +25,9 @@ canvas {
     background: white;
     width: 32px;
     height: 32px;
+}
+.colorbutton:hover {
+    border-color: #00cccc;
 }
 
 .colorcontainer {

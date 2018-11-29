@@ -47,14 +47,22 @@ function draw() {
 setInterval(draw, 1000 / 60);
 
 // buttons
+var setThickness = function(newThickness) {
+    var thicknessButton = document.getElementById('thickness' + thickness);
+    thicknessButton.style.background = "";
+    thickness = newThickness;
+    thicknessButton = document.getElementById('thickness' + thickness);
+    thicknessButton.style.background = '#00ffff';
+}
+
 document.getElementById('thickness1').onclick = function() {
-    thickness = 1;
+    setThickness(1);
 };
 document.getElementById('thickness2').onclick = function() {
-    thickness = 2;
+    setThickness(2);
 };
 document.getElementById('thickness3').onclick = function() {
-    thickness = 3;
+    setThickness(3);
 };
 document.getElementById('trashbutton').onclick = function() {
     socket.emit('clear', {});
@@ -78,6 +86,9 @@ document.getElementById('redbutton').onclick = function() { setColor('red'); };
 document.getElementById('yellowbutton').onclick = function() { setColor('yellow'); };
 document.getElementById('greenbutton').onclick = function() { setColor('green'); };
 document.getElementById('bluebutton').onclick = function() { setColor('blue'); };
+
+setColor('black');
+setThickness(1);
 
 // incoming data
 socket.on('messages', function(data) {
