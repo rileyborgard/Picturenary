@@ -34,6 +34,14 @@ var onUndo = function(data) {
     }
     drawpoints.splice(i);
 }
+var sanitize = function(str) {
+    str = str.replace(/&/g, "&amp;");
+    str = str.replace(/\"/g, "&quot;");
+    str = str.replace(/\'/g, "&#039;");
+    str = str.replace(/</g, "&lt;");
+    str = str.replace(/>/g, "&gt;");
+    return str;
+}
 
 io.sockets.on('connection', function(socket) {
     socket.on('enterGame', function(enterData) {
@@ -41,7 +49,8 @@ io.sockets.on('connection', function(socket) {
             drawerId = socket.id;
         }
         sockets[socket.id] = socket;
-        players[socket.id] = Player(enterData.name);
+        players[socket.id] = Player(sanitize(enterData.name));
+        console.log(players[socket.id].name);
         updatePlayers = true;
         updateWord = true;
 
@@ -64,6 +73,7 @@ io.sockets.on('connection', function(socket) {
         });
         socket.on('guess', function(data) {
             data.name = players[socket.id].name;
+            data.text = sanitize(data.text);
             messages.push(data);
         });
         socket.on('draw', function(data) {
