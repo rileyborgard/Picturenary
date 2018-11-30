@@ -72,9 +72,17 @@ io.sockets.on('connection', function(socket) {
             updateWord = true; //drawer could have changed
         });
         socket.on('guess', function(data) {
-            data.name = players[socket.id].name;
-            data.text = sanitize(data.text);
-            messages.push(data);
+            if(players[socket.id].guessed || socket.id == drawerId) {
+                return;
+            }
+            if(data.text == word) {
+                players[socket.id].guessed = true;
+                updatePlayers = true;
+            }else {
+                data.name = players[socket.id].name;
+                data.text = sanitize(data.text);
+                messages.push(data);
+            }
         });
         socket.on('draw', function(data) {
             if(socket.id == drawerId) {

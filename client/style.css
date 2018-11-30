@@ -19,6 +19,7 @@ body {
 #enterguestbutton {
     cursor: pointer;
     margin-top: 10px;
+    padding: 5px;
     outline: none;
     border: solid black 2px;
     border-radius: 4px;
@@ -70,6 +71,7 @@ canvas {
 }
 
 .colorbutton {
+    cursor: pointer;
     outline: none;
     border: solid black 2px;
     border-radius: 4px;
