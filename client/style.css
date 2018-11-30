@@ -25,6 +25,10 @@ body {
     background: #00ff00;
 }
 
+#word {
+    font-family: "Courier New";
+    margin-bottom: 5px;
+}
 canvas {
     border: solid black 2px;
     border-radius: 4px;

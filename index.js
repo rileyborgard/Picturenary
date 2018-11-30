@@ -11,6 +11,10 @@ console.log('server started');
 
 var sockets = {};
 
+var updateWord = false;
+var word = 'potato';
+var wordBlanks = '_ _ _ _ _ _';
+
 var updatePlayers = false;
 var Player = require('./server/player.js');
 var players = {};
@@ -39,6 +43,7 @@ io.sockets.on('connection', function(socket) {
         sockets[socket.id] = socket;
         players[socket.id] = Player(enterData.name);
         updatePlayers = true;
+        updateWord = true;
 
         socket.emit('enterGame', {});
         socket.emit('id', socket.id);
@@ -55,6 +60,7 @@ io.sockets.on('connection', function(socket) {
                 }
             }
             updatePlayers = true;
+            updateWord = true; //drawer could have changed
         });
         socket.on('guess', function(data) {
             data.name = players[socket.id].name;
@@ -88,6 +94,15 @@ setInterval(function() {
                 drawerId: drawerId,
             });
         }
+        if(updateWord) {
+            if(socket.id == drawerId) {
+                socket.emit('word', word);
+            }else {
+                socket.emit('word', wordBlanks);
+            }
+        }
     }
+    // reset
     updatePlayers = false;
+    updateWord = false;
 }, 1000/40);

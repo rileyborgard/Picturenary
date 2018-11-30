@@ -4,6 +4,7 @@ ctx.imageSmoothingEnabled = false;
 
 var socket;
 var myId;
+var word = "";
 var drawPoints;
 var thickness = 1;
 var color = 'black';
@@ -51,8 +52,9 @@ var enterGame = function() {
                 toolbox.style.display = "none";
             }
         });
-        socket.on('drawerId', function(data) {
-
+        socket.on('word', function(data) {
+            word = data;
+            document.getElementById('word').innerHTML = word;
         });
     });
 }
