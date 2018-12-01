@@ -1,6 +1,6 @@
 
 body {
-    background-image: url("background.png");
+    background-image: url("img/background.png");
 }
 
 #entergamebox {
@@ -9,21 +9,34 @@ body {
     text-align: center;
 }
 
-#nameinput {
-    margin-top: 50px;
+.mylabel {
+    color: white;
+}
+.myinput {
     outline: none;
     border: solid black 2px;
     border-radius: 4px;
     padding: 5px;
 }
+#nameinput {
+    margin-top: 50px;
+}
 #enterguestbutton {
+    background: #44ff44;
+}
+#gotologinbutton {
+    background: #4444ff;
+}
+#loginbutton {
+    background: #44ff44;
+}
+.mybutton {
     cursor: pointer;
     margin-top: 10px;
     padding: 5px;
     outline: none;
     border: solid black 2px;
     border-radius: 4px;
-    background: #00ff00;
 }
 
 #word {

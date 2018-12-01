@@ -5,6 +5,9 @@ var serv = require('http').Server(app);
 app.get('/', function(req, res) {
     res.sendFile(__dirname + '/client/index.html');
 });
+app.get('/login', function(req, res) {
+    res.sendFile(__dirname + '/client/login.html');
+});
 app.use('/client', express.static(__dirname + '/client'));
 serv.listen(process.env.PORT || 2000, '0.0.0.0');
 console.log('server started');
