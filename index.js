@@ -11,7 +11,8 @@ var session = require('express-session');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://rborgard:ThisprojectTookafoReverAndaHalf@picturenary-shard-00-00-qmtky.mongodb.net:27017,picturenary-shard-00-01-qmtky.mongodb.net:27017,picturenary-shard-00-02-qmtky.mongodb.net:27017/test?ssl=true&replicaSet=Picturenary-shard-0&authSource=admin&retryWrites=true');
+
+mongoose.connect('mongodb+srv://rborgard:ThisprojectTookafoReverAndaHalf@picturenary-qmtky.mongodb.net/test?retryWrites=true');
 var router = require('./routes/router');
 var User = require('./models/user');
 
