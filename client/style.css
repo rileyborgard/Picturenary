@@ -3,6 +3,13 @@ body {
     background-image: url("img/background.png");
 }
 
+#profilebox {
+    border: solid black 2px;
+    border-radius: 4px;
+    padding: 5px;
+    background: #88ff88;
+}
+
 .error-message {
     display: inline-block;
     background: #ffcccc;
@@ -40,7 +47,7 @@ body {
     background: #44ff44;
 }
 #gotologinbutton {
-    background: #4444ff;
+    background: #ff44ff;
 }
 #gotoregisterbutton {
     background: #ffff44;
