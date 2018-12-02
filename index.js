@@ -3,11 +3,35 @@ var express = require('express');
 var app = express();
 var serv = require('http').Server(app);
 var exphbs = require('express-handlebars');
+var bodyParser = require('body-parser');
+var expressValidator = require('express-validator');
 var router = require('./routes/router');
 
 app.set('views', './views');
 app.engine('handlebars', exphbs({defaultLayout:'layout'}));
 app.set('view engine', 'handlebars');
+
+// body parser
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
+
+// validator
+app.use(expressValidator({
+	errorFormatter: function(param, msg, value) {
+		var namespace = param.split('.'),
+		root = namespace.shift(),
+		formParam = root;
+		while(namespace.length) {
+			formParam += '[' + namespace.shift() + ']';
+		}
+		return {
+			param: formParam,
+			msg: msg,
+			value: value
+		};
+	}
+}));
+
 app.use('/', router);
 app.use('/client', express.static(__dirname + '/client'));
 serv.listen(process.env.PORT || 2000, '0.0.0.0');
