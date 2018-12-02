@@ -3,6 +3,21 @@ body {
     background-image: url("img/background.png");
 }
 
+.error-message {
+    display: inline-block;
+    background: #ffcccc;
+    border: solid black 2px;
+    border-radius: 4px;
+    padding: 5px;
+}
+.success-message {
+    display: inline-block;
+    background: #ccffcc;
+    border: solid black 2px;
+    border-radius: 4px;
+    padding: 5px;
+}
+
 #entergamebox {
     width: 100%;
     height: 100%;
