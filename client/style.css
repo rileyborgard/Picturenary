@@ -27,6 +27,9 @@ body {
 #gotologinbutton {
     background: #4444ff;
 }
+#gotoregisterbutton {
+    background: #ffff44;
+}
 #loginbutton {
     background: #44ff44;
 }
