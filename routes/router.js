@@ -9,10 +9,10 @@ router.get('/', function(req, res) {
     res.render('index');
 });
 router.get('/login', function(req, res) {
-    res.render('login');
+    res.render('login', {layout: 'menulayout'});
 });
 router.get('/register', function(req, res) {
-    res.render('register');
+    res.render('register', {layout: 'menulayout'});
 });
 
 router.post('/register', function(req, res) {
@@ -28,7 +28,8 @@ router.post('/register', function(req, res) {
 
     if(errors) {
 		res.render('register', {
-			errors: errors
+			errors: errors,
+            layout: 'menulayout',
 		});
 	}else {
 		var newUser = new User({

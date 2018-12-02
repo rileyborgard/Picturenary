@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="client/style.css">
+    <link rel="shortcut icon" href="client/favicon.png" />
+</head>
+<body>
+    <div>
+        <center>
+            <a href="/">
+                <img src="client/img/logo.png"/><br>
+            </a>
+            <div class="message-container">
+				{{#if success_msg}}
+					<div class="success-message">{{success_msg}}</div>
+				{{/if}}
+				{{#if error_msg}}
+					<div class="error-message">{{error_msg}}</div>
+				{{/if}}
+				{{#if error}}
+					<div class="error-message">{{error}}</div>
+				{{/if}}
+                {{#if errors}}
+                	<div class="message-container">
+                		{{#each errors}}
+                			<div class="error-message">{{msg}}</div>
+                		{{/each}}
+                	</div>
+                {{/if}}
+			</div>
+            {{{body}}}
+        </center>
+    </div>
+
+</body>
+</html>
