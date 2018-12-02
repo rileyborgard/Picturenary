@@ -46,6 +46,12 @@ body {
 #enterguestbutton {
     background: #44ff44;
 }
+#gotologoutbutton {
+    background: #ff4444;
+}
+#gotoprofilebutton {
+    background: #44ffff;
+}
 #gotologinbutton {
     background: #ff44ff;
 }

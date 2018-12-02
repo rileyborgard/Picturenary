@@ -35,14 +35,24 @@
     <a href="/">
         <img src="client/img/logo.png"/><br>
     </a>
-    <input class="myinput" id="nameinput" type="text" placeholder="Name"/><br>
-    <input class="mybutton" id="enterguestbutton" type="button" value="Enter as guest"/>
-    <a href="/login">
-        <input class="mybutton" id="gotologinbutton" type="button" value="Login"/>
-    </a>
-    <a href="/register">
-        <input class="mybutton" id="gotoregisterbutton" type="button" value="Register"/>
-    </a>
+    <input class="myinput" id="nameinput" type="text" placeholder="Name"/>
+    {{#if user}}
+        <input class="mybutton" id="enterguestbutton" type="button" value="Enter"/><br>
+        <a href="/logout">
+            <input class="mybutton" id="gotologoutbutton" type="button" value="Logout"/>
+        </a>
+        <a href="/profile">
+            <input class="mybutton" id="gotoprofilebutton" type="button" value="Profile"/>
+        </a>
+    {{else}}
+        <input class="mybutton" id="enterguestbutton" type="button" value="Enter as guest"/><br>
+        <a href="/login">
+            <input class="mybutton" id="gotologinbutton" type="button" value="Login"/>
+        </a>
+        <a href="/register">
+            <input class="mybutton" id="gotoregisterbutton" type="button" value="Register"/>
+        </a>
+    {{/if}}
 </div>
 
 <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>

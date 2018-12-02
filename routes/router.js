@@ -23,6 +23,11 @@ router.get('/login', function(req, res) {
 router.get('/register', function(req, res) {
     res.render('register', {layout: 'menulayout'});
 });
+router.get('/logout', function(req, res) {
+	req.logout();
+	req.flash('success_msg', 'You are logged out');
+	res.redirect('/login');
+});
 router.get('/profile', ensureAuthenticated, function(req, res) {
     res.render('profile', {layout: 'menulayout'});
 });
