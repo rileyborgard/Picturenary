@@ -3,9 +3,18 @@
         <a href="/">
             <img src="client/img/logo.png"/><br>
         </a>
-        <span class="mylabel">Username:</span> <input class="myinput" type="text"/><br>
-        <span class="mylabel">Password:</span> <input class="myinput" type="password"/><br>
-        <input class="mybutton" id="loginbutton" type="button" value="Login"/><br>
+
+        <form class="loginform" method="post" action="/login">
+            <div class="form-group">
+                <span class="mylabel">Username:</span>
+                <input class="myinput" type="text"/><br>
+            </div>
+            <div class="form-group">
+                <span class="mylabel">Password:</span>
+                <input class="myinput" type="password"/><br>
+            </div>
+            <input class="mybutton" id="loginbutton" type="submit" value="Login"/><br>
+        </form>
 
         <span class="mylabel">Don't have an account? </span>
         <a href="/register">
