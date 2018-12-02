@@ -4,6 +4,7 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 
 var User = require('../models/user');
+var sanitize = require('../server/sanitize.js');
 
 function ensureAuthenticated(req, res, next) {
 	if(req.isAuthenticated()) {
@@ -15,7 +16,7 @@ function ensureAuthenticated(req, res, next) {
 }
 
 router.get('/', function(req, res) {
-    res.render('index');
+    res.render('index', {layout: 'menulayout'});
 });
 router.get('/login', function(req, res) {
     res.render('login', {layout: 'menulayout'});
@@ -32,6 +33,12 @@ router.get('/profile', ensureAuthenticated, function(req, res) {
     res.render('profile', {layout: 'menulayout'});
 });
 
+router.post('/', function(req, res) {
+	var name = sanitize(req.body.name);
+	res.render('game', {
+		name: name,
+	});
+});
 router.post('/register', function(req, res) {
 	var username = req.body.username;
 	var password = req.body.password;

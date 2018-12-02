@@ -14,12 +14,9 @@ var colorButtons = ['blackbutton', 'whitebutton', 'redbutton', 'yellowbutton', '
 var enterGame = function() {
     socket = io();
     socket.emit('enterGame', {
-        name: document.getElementById('nameinput').value,
+        name: document.getElementById('namehidden').innerHTML,
     });
     socket.on('enterGame', function(enterData) {
-        document.getElementById('entergamebox').style.display = 'none';
-        document.getElementById('gamecontentbox').style.display = "";
-
         socket.on('id', function(data) {
             myId = data;
         });
@@ -123,8 +120,6 @@ document.getElementById('undo').onclick = function() {
     }
 };
 
-document.getElementById('enterguestbutton').onclick = enterGame;
-
 var setColor = function(newColor) {
     var lastColorButton = document.getElementById(color + 'button');
     lastColorButton.style.width = '32px';
@@ -196,3 +191,5 @@ c.addEventListener('mousemove', function(e) {
         }
     }
 });
+
+enterGame();

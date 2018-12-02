@@ -103,6 +103,7 @@ var wordBlanks = '_ _ _ _ _ _';
 
 var updatePlayers = false;
 var Player = require('./server/player.js');
+var sanitize = require('./server/sanitize.js');
 var players = {};
 var drawerId = null;
 var io = require('socket.io')(serv, {});
@@ -120,14 +121,6 @@ var onUndo = function(data) {
     }
     drawpoints.splice(i);
 }
-var sanitize = function(str) {
-    str = str.replace(/&/g, "&amp;");
-    str = str.replace(/\"/g, "&quot;");
-    str = str.replace(/\'/g, "&#039;");
-    str = str.replace(/</g, "&lt;");
-    str = str.replace(/>/g, "&gt;");
-    return str;
-}
 
 io.sockets.on('connection', function(socket) {
     socket.on('enterGame', function(enterData) {
@@ -135,7 +128,12 @@ io.sockets.on('connection', function(socket) {
             drawerId = socket.id;
         }
         sockets[socket.id] = socket;
-        players[socket.id] = Player(sanitize(enterData.name));
+		if(enterData.name) {
+	        players[socket.id] = Player(sanitize(enterData.name));
+		}else {
+			players[socket.id] = Player("");
+			console.log("no name");
+		}
         console.log(players[socket.id].name);
         updatePlayers = true;
         updateWord = true;
