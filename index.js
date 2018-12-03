@@ -207,16 +207,17 @@ io.sockets.on('connection', function(socket) {
             if(players[place[socket.id]].guessed || socket.id == drawerId) {
                 return;
             }
+			data.name = players[place[socket.id]].name;
             if(data.text == word) {
-				console.log("you guessed it!");
                 players[place[socket.id]].guessed = true;
                 updatePlayers = true;
+				data.text = '<b style="color: green">' + data.name + " guessed the word.</b>";
+				data.displayname = false;
             }else {
-				console.log("you didn't guess it! " + word + ", " + data.text);
-                data.name = players[place[socket.id]].name;
                 data.text = sanitize(data.text);
-                messages.push(data);
+				data.displayname = true;
             }
+			messages.push(data);
         });
         socket.on('draw', function(data) {
             if(socket.id == drawerId) {
@@ -268,7 +269,6 @@ setInterval(function() {
 		endTurn();
 		drawerId = players[(place[drawerId] + players.length - 1) % players.length].id;
 		beginTurn();
-		console.log("new turn " + drawerId);
 		updatePlayers = true;
 		updateWord = true;
 	}

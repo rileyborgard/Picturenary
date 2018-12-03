@@ -26,7 +26,11 @@ var enterGame = function() {
         socket.on('messages', function(data) {
             var messageBox = document.getElementById("messagebox");
             for(var i in data) {
-                messageBox.innerHTML += '<b>' + data[i].name + "</b>: " + data[i].text + "<br>";
+                if(data[i].displayname) {
+                    messageBox.innerHTML += '<b>' + data[i].name + "</b>: " + data[i].text + "<br>";
+                }else {
+                    messageBox.innerHTML += data[i].text + "<br>";
+                }
             }
         });
         socket.on('drawing', function(data) {
