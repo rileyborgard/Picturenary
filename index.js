@@ -130,6 +130,45 @@ var onUndo = function(data) {
     }
     drawpoints.splice(i);
 }
+var onDisconnect = function(socket) {
+	players.splice(place[socket.id], 1);
+	delete sockets[socket.id];
+	delete place[socket.id];
+
+	// update places based on shifting
+	for(var i in players) {
+		place[players[i].id] = i;
+	}
+
+	if(drawerId == socket.id) {
+		drawerId = players.length == 0 ? null : players[0].id;
+		beginTurn();
+	}
+	updatePlayers = true;
+	updateWord = true; //drawer could have changed
+}
+var onGuess = function(socket, data) {
+	if(players[place[socket.id]].guessed || socket.id == drawerId) {
+		return;
+	}
+	data.name = players[place[socket.id]].name;
+	if(data.text == word) {
+		players[place[socket.id]].guessed = true;
+		updatePlayers = true;
+		data.text = '<b style="color: green">' + data.name + " guessed the word.</b>";
+		data.displayname = false;
+	}else {
+		data.text = sanitize(data.text);
+		data.displayname = true;
+	}
+	messages.push(data);
+}
+var onDraw = function(socket, data) {
+	if(socket.id == drawerId) {
+		data.lineWidth = lineWidth[data.thickness - 1];
+		drawpoints.push(data);
+	}
+}
 
 var turn = 0;
 var turnDate;
@@ -187,43 +226,13 @@ io.sockets.on('connection', function(socket) {
         //socket.emit('id', socket.id);
 
         socket.on('disconnect', function() {
-			players.splice(place[socket.id], 1);
-            delete sockets[socket.id];
-			delete place[socket.id];
-
-			// update places based on shifting
-			for(var i in players) {
-				place[players[i].id] = i;
-			}
-
-            if(drawerId == socket.id) {
-				drawerId = players.length == 0 ? null : players[0].id;
-				beginTurn();
-            }
-            updatePlayers = true;
-            updateWord = true; //drawer could have changed
+			onDisconnect(socket);
         });
         socket.on('guess', function(data) {
-            if(players[place[socket.id]].guessed || socket.id == drawerId) {
-                return;
-            }
-			data.name = players[place[socket.id]].name;
-            if(data.text == word) {
-                players[place[socket.id]].guessed = true;
-                updatePlayers = true;
-				data.text = '<b style="color: green">' + data.name + " guessed the word.</b>";
-				data.displayname = false;
-            }else {
-                data.text = sanitize(data.text);
-				data.displayname = true;
-            }
-			messages.push(data);
+            onGuess(socket, data);
         });
         socket.on('draw', function(data) {
-            if(socket.id == drawerId) {
-                data.lineWidth = lineWidth[data.thickness - 1];
-                drawpoints.push(data);
-            }
+            onDraw(socket, data);
         });
         socket.on('clear', function(data) {
             drawpoints = [];
@@ -266,8 +275,8 @@ setInterval(function() {
 
 	// check time
 	if(new Date() - turnDate >= drawTime) {
-		endTurn();
 		if(players.length > 0) {
+			endTurn();
 			drawerId = players[(place[drawerId] + players.length - 1) % players.length].id;
 			beginTurn();
 			updatePlayers = true;
