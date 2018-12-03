@@ -342,6 +342,7 @@ setInterval(function() {
             }else {
                 socket.emit('word', wordBlanks);
             }
+			socket.emit('choosing', choosingWord);
         }
 		if(updateTimer) {
 			socket.emit('timer', turnDate);

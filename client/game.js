@@ -74,6 +74,12 @@ var enterGame = function() {
             wcbox.innerHTML += '<input id="wordChoice" type="button" value="' + data[1] + '" onclick="chooseWord(1);" />';
             wcbox.innerHTML += '<input id="wordChoice" type="button" value="' + data[2] + '" onclick="chooseWord(2);" />';
         });
+        socket.on('choosing', function(data) {
+            if(!data) {
+                var wcbox = document.getElementById('wordchoicebox');
+                wcbox.style.display = "none";
+            }
+        });
     });
 }
 
