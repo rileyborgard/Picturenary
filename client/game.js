@@ -11,6 +11,8 @@ var color = 'black';
 var colors = ['black', 'white', 'red', 'yellow', 'green', 'blue'];
 var colorButtons = ['blackbutton', 'whitebutton', 'redbutton', 'yellowbutton', 'greenbutton', 'bluebutton'];
 
+var turnDate;
+
 var enterGame = function() {
     socket = io();
     socket.emit('enterGame', {
@@ -55,11 +57,21 @@ var enterGame = function() {
             word = data;
             document.getElementById('word').innerHTML = word;
         });
+        socket.on('timer', function(data) {
+            turnDate = new Date();
+        });
     });
+}
+
+// updating things that cannot be triggered by an event
+function update() {
+    var secs = Math.round(Math.max(20 - (new Date() - turnDate) / 1000, 0));
+    document.getElementById("timerbox").innerHTML = secs;
 }
 
 // function to draw to the screen
 function draw() {
+    update();
     // clear screen
     ctx.fillStyle = "#fff";
     ctx.fillRect(0, 0, c.width, c.height);

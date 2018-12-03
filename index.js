@@ -128,6 +128,7 @@ var onUndo = function(data) {
 
 var turn = 0;
 var turnDate;
+var updateTimer = false;
 var beginTurn = function() {
 	// assuming drawerId is the new drawer, not the old drawer
 	drawpoints = [];
@@ -137,6 +138,7 @@ var beginTurn = function() {
 		players[i].guessed = false;
 	}
 
+	updateTimer = true;
 	turnDate = new Date();
 }
 var endTurn = function() {
@@ -238,10 +240,14 @@ setInterval(function() {
                 socket.emit('word', wordBlanks);
             }
         }
+		if(updateTimer) {
+			socket.emit('timer', turnDate);
+		}
     }
     // reset
     updatePlayers = false;
     updateWord = false;
+	updateTimer = false;
 
 	// check time
 	if(new Date() - turnDate >= drawTime) {
