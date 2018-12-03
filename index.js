@@ -212,7 +212,9 @@ var onWordChoice = function(index) {
 }
 var beginTurn = function() {
 	// assuming drawerId is the new drawer, not the old drawer
-	drawpoints = [];
+	drawpoints = [{
+		type: 'clear',
+	}];
 
 	// reset guessed variable
 	for(var i in players) {
