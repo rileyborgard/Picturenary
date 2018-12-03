@@ -34,10 +34,22 @@ router.get('/profile', ensureAuthenticated, function(req, res) {
 });
 
 router.post('/', function(req, res) {
-	var name = sanitize(req.body.name);
-	res.render('game', {
-		name: name,
-	});
+	var name = req.body.name;
+
+	req.checkBody('name', 'Name can\'t contain special characters').matches('([^<>&\'\"])*');
+	req.checkBody('name', 'Name too long').isLength({max: 15});
+	var errors = req.validationErrors();
+
+	if(errors) {
+		res.render('index', {
+			layout: 'menulayout',
+			errors: errors,
+		});
+	}else {
+		res.render('game', {
+			name: name,
+		});
+	}
 });
 router.post('/register', function(req, res) {
 	var username = req.body.username;

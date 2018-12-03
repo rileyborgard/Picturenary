@@ -267,9 +267,11 @@ setInterval(function() {
 	// check time
 	if(new Date() - turnDate >= drawTime) {
 		endTurn();
-		drawerId = players[(place[drawerId] + players.length - 1) % players.length].id;
-		beginTurn();
-		updatePlayers = true;
-		updateWord = true;
+		if(players.length > 0) {
+			drawerId = players[(place[drawerId] + players.length - 1) % players.length].id;
+			beginTurn();
+			updatePlayers = true;
+			updateWord = true;
+		}
 	}
 }, 1000/40);
