@@ -229,12 +229,12 @@ var beginTurn = function() {
 	}
 
 	// choose random word
-	choosingWord = true;
 	for(var i in wordChoices) {
 		wordChoices[i] = dict[Math.floor(Math.random() * dict.length)];
 	}
 	sockets[drawerId].emit('wordchoices', wordChoices);
 
+	choosingWord = true;
 	data = {
 		text: '<b style="color: blue">' + players[place[drawerId]].name + " is choosing a word.</b>",
 		displayname: false,

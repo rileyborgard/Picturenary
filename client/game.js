@@ -12,6 +12,7 @@ var colors = ['black', 'white', 'red', 'yellow', 'green', 'blue'];
 var colorButtons = ['blackbutton', 'whitebutton', 'redbutton', 'yellowbutton', 'greenbutton', 'bluebutton'];
 
 var turnDate = new Date();
+var roundStarted = false;
 
 var enterGame = function() {
     socket = io();
@@ -67,6 +68,7 @@ var enterGame = function() {
             turnDate = new Date();
         });
         socket.on('wordchoices', function(data) {
+            roundStarted = true;
             var wcbox = document.getElementById('wordchoicebox');
             wcbox.style.display = "block";
             wcbox.style.lineHeight = "" + c.height + "px";
@@ -75,11 +77,17 @@ var enterGame = function() {
             wcbox.innerHTML += '<input id="wordChoice" type="button" value="' + data[2] + '" onclick="chooseWord(2);" />';
         });
         socket.on('choosing', function(data) {
-            if(!data) {
+            if((!data && roundStarted) || (data && !roundStarted)) {
+                roundStarted = true;
                 var wcbox = document.getElementById('wordchoicebox');
                 wcbox.style.display = "none";
             }
         });
+
+        var wcbox = document.getElementById('wordchoicebox');
+        wcbox.style.display = "block";
+        wcbox.style.lineHeight = "" + c.height + "px";
+        wcbox.innerHTML = 'Please wait for the next round to start';
     });
 }
 
@@ -94,6 +102,9 @@ var chooseWord = function(idx) {
 // updating things that cannot be triggered by an event
 function update() {
     var secs = Math.round(Math.max(20 - (new Date() - turnDate) / 1000, 0));
+    if(!roundStarted) {
+        secs = 0;
+    }
     document.getElementById("timerbox").innerHTML = secs;
 }
 
@@ -104,6 +115,10 @@ function draw() {
     ctx.fillStyle = "#fff";
     ctx.fillRect(0, 0, c.width, c.height);
 
+    if(!roundStarted) {
+        return;
+    }
+    
     ctx.fillStyle = "#000";
     for(var i in drawPoints) {
         if(drawPoints[i].type == 'click') {
