@@ -95,6 +95,11 @@ app.use('/client', express.static(__dirname + '/client'));
 serv.listen(process.env.PORT || 2000, '0.0.0.0');
 console.log('server started');
 
+// read dictionary
+var fs = require('fs');
+var text = fs.readFileSync('./server/dict.txt', 'utf-8');
+var dict = text.split('\r\n');
+
 // 20 seconds
 const drawTime = 20000;
 
@@ -136,6 +141,13 @@ var beginTurn = function() {
 	// reset guessed variable
 	for(var i in players) {
 		players[i].guessed = false;
+	}
+
+	// choose random word
+	word = dict[Math.floor(Math.random() * dict.length)];
+	wordBlanks = "_";
+	for(var i = 0; i < word.length - 1; i++) {
+		wordBlanks += " _";
 	}
 
 	updateTimer = true;
@@ -196,9 +208,11 @@ io.sockets.on('connection', function(socket) {
                 return;
             }
             if(data.text == word) {
+				console.log("you guessed it!");
                 players[place[socket.id]].guessed = true;
                 updatePlayers = true;
             }else {
+				console.log("you didn't guess it! " + word + ", " + data.text);
                 data.name = players[place[socket.id]].name;
                 data.text = sanitize(data.text);
                 messages.push(data);

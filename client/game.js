@@ -11,7 +11,7 @@ var color = 'black';
 var colors = ['black', 'white', 'red', 'yellow', 'green', 'blue'];
 var colorButtons = ['blackbutton', 'whitebutton', 'redbutton', 'yellowbutton', 'greenbutton', 'bluebutton'];
 
-var turnDate;
+var turnDate = new Date();
 
 var enterGame = function() {
     socket = io();
