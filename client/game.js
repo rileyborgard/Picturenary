@@ -70,11 +70,19 @@ var enterGame = function() {
             var wcbox = document.getElementById('wordchoicebox');
             wcbox.style.display = "block";
             wcbox.style.lineHeight = "" + c.height + "px";
-            wcbox.innerHTML = '<input id="wordChoice" type="button" value="' + data[0] + '" />';
-            wcbox.innerHTML += '<input id="wordChoice" type="button" value="' + data[1] + '" />';
-            wcbox.innerHTML += '<input id="wordChoice" type="button" value="' + data[2] + '" />';
+            wcbox.innerHTML = '<input id="wordChoice" type="button" value="' + data[0] + '" onclick="chooseWord(0);" />';
+            wcbox.innerHTML += '<input id="wordChoice" type="button" value="' + data[1] + '" onclick="chooseWord(1);" />';
+            wcbox.innerHTML += '<input id="wordChoice" type="button" value="' + data[2] + '" onclick="chooseWord(2);" />';
         });
     });
+}
+
+var chooseWord = function(idx) {
+    if(socket) {
+        socket.emit('wordchoice', idx);
+        var wcbox = document.getElementById('wordchoicebox');
+        wcbox.style.display = "none";
+    }
 }
 
 // updating things that cannot be triggered by an event

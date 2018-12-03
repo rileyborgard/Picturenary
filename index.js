@@ -116,8 +116,8 @@ var sockets = {};
 var place = {};
 
 var updateWord = false;
-var word = 'potato';
-var wordBlanks = '_ _ _ _ _ _';
+var word = "";
+var wordBlanks = "";
 
 var updatePlayers = false;
 var Player = require('./server/player.js');
