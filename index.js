@@ -140,6 +140,7 @@ var onUndo = function(data) {
     drawpoints.splice(i);
 }
 var onDisconnect = function(socket) {
+	var name = players[place[socket.id]].name;
 	players.splice(place[socket.id], 1);
 	delete sockets[socket.id];
 	delete place[socket.id];
@@ -155,6 +156,14 @@ var onDisconnect = function(socket) {
 	}
 	updatePlayers = true;
 	updateWord = true; //drawer could have changed
+
+	var data = {
+		text: '<b style="color: #cc0000">' + name + " left.</b>",
+		displayname: false,
+		special: false,
+	};
+	messages.push(data);
+	allMessages.push(data);
 }
 var onGuess = function(socket, data) {
 	var special = players[place[socket.id]].guessed || socket.id == drawerId;
@@ -250,6 +259,14 @@ io.sockets.on('connection', function(socket) {
             drawpoints = [];
         });
         socket.on('undo', onUndo);
+
+		var data = {
+			text: '<b style="color: green">' + enterData.name + " joined.</b>",
+			displayname: false,
+			special: false,
+		};
+		messages.push(data);
+		allMessages.push(data);
     });
 });
 
