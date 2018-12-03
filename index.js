@@ -205,6 +205,7 @@ var onDraw = function(socket, data) {
 }
 
 var onWordChoice = function(index) {
+	clearTimeout(wordChoiceTimeout);
 	if(choosingWord) {
 		choosingWord = false;
 		word = wordChoices[index];
@@ -258,6 +259,14 @@ var endTurn = function() {
 		}
 	}
 	players[place[drawerId]].score += n * 50;
+
+	data = {
+		text: '<b style="color: green">The word was ' + word + '</b>',
+		displayname: false,
+		special: false,
+	};
+	messages.push(data);
+	allMessages.push(data);
 }
 
 io.sockets.on('connection', function(socket) {
@@ -322,11 +331,13 @@ setInterval(function() {
 	var allMessageData = allMessages.slice(0, m);
 	allMessages.splice(0, m);
 
+	var allGuessed = true;
     for(var id in sockets) {
         var socket = sockets[id];
 		if(players[place[id]].guessed || id == drawerId) {
 			socket.emit('messages', allMessageData);
 		}else {
+			allGuessed = false;
 	        socket.emit('messages', messageData);
 		}
         socket.emit('drawing', drawpoints);
@@ -354,7 +365,7 @@ setInterval(function() {
 	updateTimer = false;
 
 	// check time
-	if(!choosingWord && new Date() - turnDate >= drawTime) {
+	if(!choosingWord && (allGuessed || new Date() - turnDate >= drawTime)) {
 		if(players.length > 0) {
 			endTurn();
 			drawerId = players[(place[drawerId] + players.length - 1) % players.length].id;
