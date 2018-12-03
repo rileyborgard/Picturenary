@@ -130,6 +130,14 @@ var allMessages = [];
 var drawpoints = [];
 var lineWidth = [1.0 / 500, 4.0 / 500, 10.0 / 500];
 
+var choosingWord = false;
+var wordChoices = ["", "", ""];
+var wordChoiceTimeout;
+
+var turn = 0;
+var turnDate;
+var updateTimer = false;
+
 var onUndo = function(data) {
     var i = drawpoints.length - 1;
     for(; i >= 0; i--) {
@@ -140,6 +148,7 @@ var onUndo = function(data) {
     drawpoints.splice(i);
 }
 var onDisconnect = function(socket) {
+	var prevPlace = place[socket.id];
 	var name = players[place[socket.id]].name;
 	players.splice(place[socket.id], 1);
 	delete sockets[socket.id];
@@ -151,8 +160,11 @@ var onDisconnect = function(socket) {
 	}
 
 	if(drawerId == socket.id) {
-		drawerId = players.length == 0 ? null : players[0].id;
-		beginTurn();
+		clearTimeout(wordChoiceTimeout);
+		drawerId = players.length == 0 ? null : players[(prevPlace + players.length - 1) % players.length].id;
+		if(drawerId) {
+			beginTurn();
+		}
 	}
 	updatePlayers = true;
 	updateWord = true; //drawer could have changed
@@ -191,9 +203,20 @@ var onDraw = function(socket, data) {
 	}
 }
 
-var turn = 0;
-var turnDate;
-var updateTimer = false;
+var onWordChoice = function(index) {
+	if(choosingWord) {
+		choosingWord = false;
+		word = wordChoices[index];
+		wordBlanks = "_";
+		for(var i = 0; i < word.length - 1; i++) {
+			wordBlanks += " _";
+		}
+		updateWord = true;
+
+		updateTimer = true;
+		turnDate = new Date();
+	}
+}
 var beginTurn = function() {
 	// assuming drawerId is the new drawer, not the old drawer
 	drawpoints = [];
@@ -204,14 +227,16 @@ var beginTurn = function() {
 	}
 
 	// choose random word
-	word = dict[Math.floor(Math.random() * dict.length)];
-	wordBlanks = "_";
-	for(var i = 0; i < word.length - 1; i++) {
-		wordBlanks += " _";
+	choosingWord = true;
+	for(var i in wordChoices) {
+		wordChoices[i] = dict[Math.floor(Math.random() * dict.length)];
 	}
+	sockets[drawerId].emit('wordChoices', wordChoices);
 
-	updateTimer = true;
-	turnDate = new Date();
+	// give them 8 seconds to choose a word
+	wordChoiceTimeout = setTimeout(function() {
+		onWordChoice(Math.floor(Math.random(wordChoices.length)));
+	}, 8000);
 }
 var endTurn = function() {
 	// assuming drawerId is the drawer of the turn that just ended
@@ -228,13 +253,14 @@ var endTurn = function() {
 
 io.sockets.on('connection', function(socket) {
     socket.on('enterGame', function(enterData) {
+        sockets[socket.id] = socket;
+		place[socket.id] = players.length;
+
         if(drawerId == null) {
             drawerId = socket.id;
 			beginTurn();
         }
 
-        sockets[socket.id] = socket;
-		place[socket.id] = players.length;
 		if(enterData.name) {
 			players.push(Player(socket.id, sanitize(enterData.name)));
 		}else {
@@ -259,6 +285,11 @@ io.sockets.on('connection', function(socket) {
             drawpoints = [];
         });
         socket.on('undo', onUndo);
+		socket.on('wordchoice', function(data) {
+			if(choosingWord && drawerId == socket.id && (data >= 0 && data < wordChoices.length)) {
+				onWordChoice(data);
+			}
+		});
 
 		var data = {
 			text: '<b style="color: green">' + enterData.name + " joined.</b>",
@@ -312,13 +343,12 @@ setInterval(function() {
 	updateTimer = false;
 
 	// check time
-	if(new Date() - turnDate >= drawTime) {
+	if(!choosingWord && new Date() - turnDate >= drawTime) {
 		if(players.length > 0) {
 			endTurn();
 			drawerId = players[(place[drawerId] + players.length - 1) % players.length].id;
 			beginTurn();
 			updatePlayers = true;
-			updateWord = true;
 		}
 	}
 }, 1000/40);

@@ -165,7 +165,6 @@ guessinput.addEventListener('keydown', function(e) {
         if(socket) {
             socket.emit('guess', {
                 text: guessinput.value,
-                name: 'Jim',
             });
         }
         guessinput.value = "";
