@@ -110,6 +110,7 @@ for(var i = 0; i < dict.length; i++) {
 // 20 seconds
 const drawTime = 20000;
 const maxMessage = 200;
+const wordChoiceTime = 8000;
 
 var sockets = {};
 var place = {};
@@ -231,12 +232,12 @@ var beginTurn = function() {
 	for(var i in wordChoices) {
 		wordChoices[i] = dict[Math.floor(Math.random() * dict.length)];
 	}
-	sockets[drawerId].emit('wordChoices', wordChoices);
+	sockets[drawerId].emit('wordchoices', wordChoices);
 
 	// give them 8 seconds to choose a word
 	wordChoiceTimeout = setTimeout(function() {
 		onWordChoice(Math.floor(Math.random(wordChoices.length)));
-	}, 8000);
+	}, wordChoiceTime);
 }
 var endTurn = function() {
 	// assuming drawerId is the drawer of the turn that just ended
@@ -253,6 +254,8 @@ var endTurn = function() {
 
 io.sockets.on('connection', function(socket) {
     socket.on('enterGame', function(enterData) {
+        socket.emit('enterGame', {});
+
         sockets[socket.id] = socket;
 		place[socket.id] = players.length;
 
@@ -269,7 +272,6 @@ io.sockets.on('connection', function(socket) {
         updatePlayers = true;
         updateWord = true;
 
-        socket.emit('enterGame', {});
         //socket.emit('id', socket.id);
 
         socket.on('disconnect', function() {

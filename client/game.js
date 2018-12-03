@@ -66,6 +66,14 @@ var enterGame = function() {
         socket.on('timer', function(data) {
             turnDate = new Date();
         });
+        socket.on('wordchoices', function(data) {
+            var wcbox = document.getElementById('wordchoicebox');
+            wcbox.style.display = "block";
+            wcbox.style.lineHeight = "" + c.height + "px";
+            wcbox.innerHTML = '<input id="wordChoice" type="button" value="' + data[0] + '" />';
+            wcbox.innerHTML += '<input id="wordChoice" type="button" value="' + data[1] + '" />';
+            wcbox.innerHTML += '<input id="wordChoice" type="button" value="' + data[2] + '" />';
+        });
     });
 }
 
