@@ -102,6 +102,7 @@ var dict = text.split('\r\n');
 
 // 20 seconds
 const drawTime = 20000;
+const maxMessage = 200;
 
 var sockets = {};
 var place = {};
@@ -158,7 +159,7 @@ var onGuess = function(socket, data) {
 		data.text = '<b style="color: green">' + data.name + " guessed the word.</b>";
 		data.displayname = false;
 	}else {
-		data.text = sanitize(data.text);
+		data.text = sanitize(data.text.substr(0, maxMessage));
 		data.displayname = true;
 	}
 	messages.push(data);
