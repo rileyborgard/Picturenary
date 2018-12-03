@@ -97,8 +97,8 @@ console.log('server started');
 
 // read dictionary
 var fs = require('fs');
-var text = fs.readFileSync('./server/dict.txt', 'utf-8');
-var dict = text.split('\r\n');
+var text = fs.readFileSync('./server/dict.json', 'utf-8');
+var dict = JSON.parse(text);
 // remove "empty words";
 for(var i = 0; i < dict.length; i++) {
 	if(dict[i].length == 0) {
