@@ -95,6 +95,9 @@ app.use('/client', express.static(__dirname + '/client'));
 serv.listen(process.env.PORT || 2000, '0.0.0.0');
 console.log('server started');
 
+// 20 seconds
+const drawTime = 20000;
+
 var sockets = {};
 var place = {};
 
@@ -123,10 +126,37 @@ var onUndo = function(data) {
     drawpoints.splice(i);
 }
 
+var turn = 0;
+var turnDate;
+var beginTurn = function() {
+	// assuming drawerId is the new drawer, not the old drawer
+	drawpoints = [];
+
+	// reset guessed variable
+	for(var i in players) {
+		players[i].guessed = false;
+	}
+
+	turnDate = new Date();
+}
+var endTurn = function() {
+	// assuming drawerId is the drawer of the turn that just ended
+	// add scores
+	var n = 0;
+	for(var i in players) {
+		if(players[i].guessed) {
+			n++;
+			players[i].score += 100;
+		}
+	}
+	players[place[drawerId]].score += n * 50;
+}
+
 io.sockets.on('connection', function(socket) {
     socket.on('enterGame', function(enterData) {
         if(drawerId == null) {
             drawerId = socket.id;
+			beginTurn();
         }
 
         sockets[socket.id] = socket;
@@ -153,11 +183,8 @@ io.sockets.on('connection', function(socket) {
 			}
 
             if(drawerId == socket.id) {
-                drawerId = null;
-                for(var i in players) {
-                    drawerId = players[i].id;
-                    break;
-                }
+				drawerId = players.length == 0 ? null : players[0].id;
+				beginTurn();
             }
             updatePlayers = true;
             updateWord = true; //drawer could have changed
@@ -170,7 +197,7 @@ io.sockets.on('connection', function(socket) {
                 players[place[socket.id]].guessed = true;
                 updatePlayers = true;
             }else {
-                data.name = players[places[socket.id]].name;
+                data.name = players[place[socket.id]].name;
                 data.text = sanitize(data.text);
                 messages.push(data);
             }
@@ -215,4 +242,14 @@ setInterval(function() {
     // reset
     updatePlayers = false;
     updateWord = false;
+
+	// check time
+	if(new Date() - turnDate >= drawTime) {
+		endTurn();
+		drawerId = players[(place[drawerId] + players.length - 1) % players.length].id;
+		beginTurn();
+		console.log("new turn " + drawerId);
+		updatePlayers = true;
+		updateWord = true;
+	}
 }, 1000/40);
