@@ -27,10 +27,12 @@ var enterGame = function() {
             var messageBox = document.getElementById("messagebox");
             for(var i in data) {
                 if(data[i].displayname) {
-                    messageBox.innerHTML += '<b>' + data[i].name + "</b>: " + data[i].text + "<br>";
-                }else {
-                    messageBox.innerHTML += data[i].text + "<br>";
+                    data[i].text = '<b>' + data[i].name + "</b>: " + data[i].text;
                 }
+                if(data[i].special) {
+                    data[i].text = '<span style="color:#008800">' + data[i].text + '</span>';
+                }
+                messageBox.innerHTML += data[i].text + "<br>";
             }
         });
         socket.on('drawing', function(data) {

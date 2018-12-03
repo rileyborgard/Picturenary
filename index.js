@@ -119,6 +119,7 @@ var drawerId = null;
 var io = require('socket.io')(serv, {});
 
 var messages = [];
+var allMessages = [];
 var drawpoints = [];
 var lineWidth = [1.0 / 500, 4.0 / 500, 10.0 / 500];
 
@@ -149,20 +150,23 @@ var onDisconnect = function(socket) {
 	updateWord = true; //drawer could have changed
 }
 var onGuess = function(socket, data) {
-	if(players[place[socket.id]].guessed || socket.id == drawerId) {
-		return;
-	}
+	var special = players[place[socket.id]].guessed || socket.id == drawerId;
 	data.name = players[place[socket.id]].name;
-	if(data.text == word) {
+	if(data.text == word && !special) {
 		players[place[socket.id]].guessed = true;
 		updatePlayers = true;
 		data.text = '<b style="color: green">' + data.name + " guessed the word.</b>";
 		data.displayname = false;
+		data.special = false;
 	}else {
 		data.text = sanitize(data.text.substr(0, maxMessage));
+		data.special = special;
 		data.displayname = true;
 	}
-	messages.push(data);
+	allMessages.push(data);
+	if(!special) {
+		messages.push(data);
+	}
 }
 var onDraw = function(socket, data) {
 	if(socket.id == drawerId) {
@@ -248,9 +252,18 @@ setInterval(function() {
     var n = messages.length;
     var messageData = messages.slice(0, n);
     messages.splice(0, n);
+
+	var m = allMessages.length;
+	var allMessageData = allMessages.slice(0, m);
+	allMessages.splice(0, m);
+
     for(var id in sockets) {
         var socket = sockets[id];
-        socket.emit('messages', messageData);
+		if(players[place[id]].guessed || id == drawerId) {
+			socket.emit('messages', allMessageData);
+		}else {
+	        socket.emit('messages', messageData);
+		}
         socket.emit('drawing', drawpoints);
         if(updatePlayers) {
             socket.emit('players', {
