@@ -5,7 +5,7 @@ ctx.imageSmoothingEnabled = false;
 var socket;
 var myId;
 var word = "";
-var drawPoints;
+var drawPoints = [];
 var thickness = 1;
 var color = 'black';
 var colors = ['black', 'white', 'red', 'yellow', 'green', 'blue'];
@@ -37,7 +37,22 @@ var enterGame = function() {
             }
         });
         socket.on('drawing', function(data) {
-            drawPoints = data;
+            //drawPoints = drawPoints.concat(data);
+            for(var i = 0; i < data.length; i++) {
+                if(data[i].type == 'clear') {
+                    drawPoints = [];
+                }else if(data[i].type == 'undo') {
+                    var j = drawPoints.length - 1;
+                    for(; j >= 0; j--) {
+                        if(drawPoints[j].type != 'drag') {
+                            break;
+                        }
+                    }
+                    drawPoints.splice(j);
+                }else {
+                    drawPoints.push(data[i]);
+                }
+            }
         });
         socket.on('players', function(data) {
             var userBox = document.getElementById('userbox');
@@ -118,7 +133,7 @@ function draw() {
     if(!roundStarted) {
         return;
     }
-    
+
     ctx.fillStyle = "#000";
     for(var i in drawPoints) {
         if(drawPoints[i].type == 'click') {

@@ -139,15 +139,6 @@ var turn = 0;
 var turnDate;
 var updateTimer = false;
 
-var onUndo = function(data) {
-    var i = drawpoints.length - 1;
-    for(; i >= 0; i--) {
-        if(drawpoints[i].type != 'drag') {
-            break;
-        }
-    }
-    drawpoints.splice(i);
-}
 var onDisconnect = function(socket) {
 	var prevPlace = place[socket.id];
 	var name = players[place[socket.id]].name;
@@ -296,9 +287,15 @@ io.sockets.on('connection', function(socket) {
             onDraw(socket, data);
         });
         socket.on('clear', function(data) {
-            drawpoints = [];
+            drawpoints = [{
+				type: 'clear',
+			}];
         });
-        socket.on('undo', onUndo);
+        socket.on('undo', function(data) {
+			drawpoints.push({
+				type: 'undo',
+			});
+		});
 		socket.on('wordchoice', function(data) {
 			if(choosingWord && drawerId == socket.id && (data >= 0 && data < wordChoices.length)) {
 				onWordChoice(data);
@@ -331,6 +328,10 @@ setInterval(function() {
 	var allMessageData = allMessages.slice(0, m);
 	allMessages.splice(0, m);
 
+	var k = drawpoints.length;
+	var drawData = drawpoints.slice(0, k);
+	drawpoints.splice(0, k);
+
 	var allGuessed = true;
     for(var id in sockets) {
         var socket = sockets[id];
@@ -340,7 +341,7 @@ setInterval(function() {
 			allGuessed = false;
 	        socket.emit('messages', messageData);
 		}
-        socket.emit('drawing', drawpoints);
+        socket.emit('drawing', drawData);
         if(updatePlayers) {
             socket.emit('players', {
                 players: players,
