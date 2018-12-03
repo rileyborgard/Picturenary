@@ -99,6 +99,13 @@ console.log('server started');
 var fs = require('fs');
 var text = fs.readFileSync('./server/dict.txt', 'utf-8');
 var dict = text.split('\r\n');
+// remove "empty words";
+for(var i = 0; i < dict.length; i++) {
+	if(dict[i].length == 0) {
+		dict.splice(i, 1);
+		i--;
+	}
+}
 
 // 20 seconds
 const drawTime = 20000;
