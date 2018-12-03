@@ -36,7 +36,7 @@ var enterGame = function() {
             var drawerId = data.drawerId;
             userBox.innerHTML = "";
             for(var i in players) {
-                if(i == drawerId) {
+                if(players[i].id == drawerId) {
                     userBox.innerHTML += '<div class="user"><img src="client/img/pencil.png" width="16px" height="16px"><b>' + players[i].name + '</b><br>Score: ' + players[i].score + '</div>';
                 }else if(players[i].guessed) {
                     userBox.innerHTML += '<div class="user" style="background-color: #ccffcc;"><b>' + players[i].name + '</b><br>Score: ' + players[i].score + '</div>';

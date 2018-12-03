@@ -96,6 +96,7 @@ serv.listen(process.env.PORT || 2000, '0.0.0.0');
 console.log('server started');
 
 var sockets = {};
+var place = {};
 
 var updateWord = false;
 var word = 'potato';
@@ -104,7 +105,7 @@ var wordBlanks = '_ _ _ _ _ _';
 var updatePlayers = false;
 var Player = require('./server/player.js');
 var sanitize = require('./server/sanitize.js');
-var players = {};
+var players = [];
 var drawerId = null;
 var io = require('socket.io')(serv, {});
 
@@ -127,28 +128,34 @@ io.sockets.on('connection', function(socket) {
         if(drawerId == null) {
             drawerId = socket.id;
         }
+
         sockets[socket.id] = socket;
+		place[socket.id] = players.length;
 		if(enterData.name) {
-	        players[socket.id] = Player(sanitize(enterData.name));
+			players.push(Player(socket.id, sanitize(enterData.name)));
 		}else {
-			players[socket.id] = Player("");
-			console.log("no name");
+			players.push(Player(socket.id, ""));
 		}
-        console.log(players[socket.id].name);
         updatePlayers = true;
         updateWord = true;
 
         socket.emit('enterGame', {});
-        socket.emit('id', socket.id);
+        //socket.emit('id', socket.id);
 
         socket.on('disconnect', function() {
-            delete players[socket.id];
+			players.splice(place[socket.id], 1);
             delete sockets[socket.id];
+			delete place[socket.id];
+
+			// update places based on shifting
+			for(var i in players) {
+				place[players[i].id] = i;
+			}
 
             if(drawerId == socket.id) {
                 drawerId = null;
                 for(var i in players) {
-                    drawerId = i;
+                    drawerId = players[i].id;
                     break;
                 }
             }
@@ -156,14 +163,14 @@ io.sockets.on('connection', function(socket) {
             updateWord = true; //drawer could have changed
         });
         socket.on('guess', function(data) {
-            if(players[socket.id].guessed || socket.id == drawerId) {
+            if(players[place[socket.id]].guessed || socket.id == drawerId) {
                 return;
             }
             if(data.text == word) {
-                players[socket.id].guessed = true;
+                players[place[socket.id]].guessed = true;
                 updatePlayers = true;
             }else {
-                data.name = players[socket.id].name;
+                data.name = players[places[socket.id]].name;
                 data.text = sanitize(data.text);
                 messages.push(data);
             }
@@ -181,6 +188,7 @@ io.sockets.on('connection', function(socket) {
     });
 });
 
+// game loop
 setInterval(function() {
     // send the first n messages, like a queue
     var n = messages.length;
