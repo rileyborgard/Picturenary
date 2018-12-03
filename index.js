@@ -198,7 +198,7 @@ var onGuess = function(socket, data) {
 	}
 }
 var onDraw = function(socket, data) {
-	if(socket.id == drawerId) {
+	if(socket.id == drawerId && !choosingWord) {
 		data.lineWidth = lineWidth[data.thickness - 1];
 		drawpoints.push(data);
 	}
@@ -234,6 +234,14 @@ var beginTurn = function() {
 	}
 	sockets[drawerId].emit('wordchoices', wordChoices);
 
+	data = {
+		text: '<b style="color: blue">' + players[place[drawerId]].name + " is choosing a word.</b>",
+		displayname: false,
+		special: false,
+	};
+	messages.push(data);
+	allMessages.push(data);
+
 	// give them 8 seconds to choose a word
 	wordChoiceTimeout = setTimeout(function() {
 		onWordChoice(Math.floor(Math.random(wordChoices.length)));
@@ -258,11 +266,6 @@ io.sockets.on('connection', function(socket) {
 
         sockets[socket.id] = socket;
 		place[socket.id] = players.length;
-
-        if(drawerId == null) {
-            drawerId = socket.id;
-			beginTurn();
-        }
 
 		if(enterData.name) {
 			players.push(Player(socket.id, sanitize(enterData.name)));
@@ -300,6 +303,11 @@ io.sockets.on('connection', function(socket) {
 		};
 		messages.push(data);
 		allMessages.push(data);
+
+		if(drawerId == null) {
+            drawerId = socket.id;
+			beginTurn();
+        }
     });
 });
 
