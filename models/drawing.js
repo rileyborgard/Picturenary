@@ -18,6 +18,11 @@ Drawing.getDrawingByUserId = function(userid, callback) {
 	Drawing.findOne(query, callback);
 }
 
+Drawing.getDrawingById = function(drawingid, callback) {
+    var query = {_id: drawingid};
+    Drawing.findOne(query, callback);
+}
+
 Drawing.createDrawing = function(userId, drawpoints, callback) {
     var drawing = new Drawing({
         userid: userId,

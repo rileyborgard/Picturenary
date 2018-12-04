@@ -35,17 +35,21 @@ router.get('/profile', ensureAuthenticated, function(req, res) {
 });
 router.get('/drawing', ensureAuthenticated, function(req, res) {
 	//console.log('drawing requested by: ' + req.user._id);
-	Drawing.getDrawingByUserId(req.user._id, function(err, drawing1) {
-		if(err) {
-			throw err;
-		}else if(!drawing1) {
-			//console.log('No drawing found');
-			res.sendStatus(204);
-		}else {
-			//console.log('sending drawing');
-			res.send(drawing1);
-		}
-	});
+	if(req.user.drawings.length == 0) {
+		res.sendStatus(204);
+	}else {
+		Drawing.getDrawingById(req.user.drawings[0], function(err, drawing1) {
+			if(err) {
+				throw err;
+			}else if(!drawing1) {
+				//console.log('No drawing found');
+				res.sendStatus(204);
+			}else {
+				//console.log('sending drawing');
+				res.send(drawing1);
+			}
+		});
+	}
 });
 
 router.post('/', function(req, res) {
