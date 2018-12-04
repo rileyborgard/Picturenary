@@ -4,6 +4,7 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 
 var User = require('../models/user');
+var Drawing = require('../models/drawing');
 var sanitize = require('../server/sanitize.js');
 
 function ensureAuthenticated(req, res, next) {
@@ -31,6 +32,16 @@ router.get('/logout', function(req, res) {
 });
 router.get('/profile', ensureAuthenticated, function(req, res) {
     res.render('profile', {layout: 'menulayout'});
+});
+router.get('/drawing', ensureAuthenticated, function(req, res) {
+	console.log('drawing requested by: ' + req.user._id);
+	Drawing.getDrawingByUserId(req.user._id, function(err, drawing1) {
+		if(err) {
+			throw err;
+		}else {
+			res.send(drawing1);
+		}
+	});
 });
 
 router.post('/', function(req, res) {
