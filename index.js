@@ -143,7 +143,7 @@ var wordChoices = ["", "", ""];
 var wordChoiceTimeout;
 
 var turn = 0;
-var turnDate;
+var turnDate = new Date();
 var updateTimer = false;
 
 var onDisconnect = function(socket) {
@@ -238,6 +238,7 @@ var beginTurn = function() {
 	sockets[drawerId].emit('wordchoices', wordChoices);
 
 	choosingWord = true;
+	updateWord = true;
 	data = {
 		text: '<b style="color: blue">' + players[place[drawerId]].name + " is choosing a word.</b>",
 		displayname: false,
@@ -300,6 +301,7 @@ io.sockets.on('connection', function(socket) {
 		}
         updatePlayers = true;
         updateWord = true;
+		updateTimer = true;
 
         //socket.emit('id', socket.id);
 
@@ -388,6 +390,9 @@ setInterval(function() {
                 drawerId: drawerId,
             });
         }
+		if(updateTimer) {
+			socket.emit('timer', (new Date() - turnDate) / 1000.0);
+		}
         if(updateWord) {
             if(socket.id == drawerId) {
                 socket.emit('word', word);
@@ -396,9 +401,6 @@ setInterval(function() {
             }
 			socket.emit('choosing', choosingWord);
         }
-		if(updateTimer) {
-			socket.emit('timer', turnDate);
-		}
     }
     // reset
     updatePlayers = false;

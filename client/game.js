@@ -12,6 +12,7 @@ var colors = ['black', 'white', 'red', 'yellow', 'green', 'blue'];
 var colorButtons = ['blackbutton', 'whitebutton', 'redbutton', 'yellowbutton', 'greenbutton', 'bluebutton'];
 
 var turnDate = new Date();
+var timerOffset = 10000;
 
 var enterGame = function() {
     socket = io();
@@ -80,6 +81,7 @@ var enterGame = function() {
         });
         socket.on('timer', function(data) {
             turnDate = new Date();
+            timerOffset = data;
         });
         socket.on('wordchoices', function(data) {
             var wcbox = document.getElementById('wordchoicebox');
@@ -92,6 +94,7 @@ var enterGame = function() {
         socket.on('choosing', function(data) {
             if(data) {
                 // the next word is being chosen
+                timerOffset = 10000;
             }else {
                 var wcbox = document.getElementById('wordchoicebox');
                 wcbox.style.display = "none";
@@ -110,7 +113,7 @@ var chooseWord = function(idx) {
 
 // updating things that cannot be triggered by an event
 function update() {
-    var secs = Math.round(Math.max(20 - (new Date() - turnDate) / 1000, 0));
+    var secs = Math.round(Math.max(20 - timerOffset - (new Date() - turnDate) / 1000, 0));
     document.getElementById("timerbox").innerHTML = secs;
 }
 
