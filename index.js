@@ -15,6 +15,7 @@ var mongoose = require('mongoose');
 mongoose.connect('mongodb+srv://rborgard:ThisprojectTookafoReverAndaHalf@picturenary-qmtky.mongodb.net/test?retryWrites=true');
 var router = require('./routes/router');
 var User = require('./models/user');
+var Drawing = require('./models/drawing');
 
 app.set('views', './views');
 app.engine('handlebars', exphbs({defaultLayout:'layout'}));
@@ -263,7 +264,7 @@ var endTurn = function() {
 	// save drawing to database
 	var skt = sockets[drawerId];
 	if(skt.request.session.passport != null && alldrawpoints.length > 1) {
-		User.addDrawing(skt.request.session.passport.user, alldrawpoints, function(err, user) {
+		Drawing.createDrawing(skt.request.session.passport.user, alldrawpoints, function(err, user) {
 			if(err) {
 				throw err;
 			}
