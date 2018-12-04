@@ -73,6 +73,7 @@ router.post('/register', function(req, res) {
 			password: password,
 			email: email,
             displayname: 'My name',
+			drawings: [],
 		});
 		User.getUserByUsername(newUser.username, function(err1, user1) {
 			if(err1)

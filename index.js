@@ -43,11 +43,12 @@ app.use(expressValidator({
 }));
 
 // session
-app.use(session({
+var sessionMiddle = session({
 	secret: 'secret',
 	saveUninitialized: true,
 	resave: true
-}));
+});
+app.use(sessionMiddle);
 
 // passport
 passport.use(new LocalStrategy(
@@ -125,10 +126,14 @@ var sanitize = require('./server/sanitize.js');
 var players = [];
 var drawerId = null;
 var io = require('socket.io')(serv, {});
+io.use(function(socket, next) {
+	sessionMiddle(socket.request, {}, next);
+});
 
 var messages = [];
 var allMessages = [];
 var drawpoints = [];
+var alldrawpoints = [];
 var lineWidth = [1.0 / 500, 4.0 / 500, 10.0 / 500];
 
 var choosingWord = false;
@@ -192,6 +197,7 @@ var onDraw = function(socket, data) {
 	if(socket.id == drawerId && !choosingWord) {
 		data.lineWidth = lineWidth[data.thickness - 1];
 		drawpoints.push(data);
+		alldrawpoints.push(data);
 	}
 }
 
@@ -215,6 +221,7 @@ var beginTurn = function() {
 	drawpoints = [{
 		type: 'clear',
 	}];
+	alldrawpoints = [];
 
 	// reset guessed variable
 	for(var i in players) {
@@ -253,6 +260,18 @@ var endTurn = function() {
 	}
 	players[place[drawerId]].score += n * 50;
 
+	// save drawing to database
+	var skt = sockets[drawerId];
+	if(skt.request.session.passport != null && alldrawpoints.length > 1) {
+		User.addDrawing(skt.request.session.passport.user, alldrawpoints, function(err, user) {
+			if(err) {
+				throw err;
+			}
+		});
+	}else {
+		console.log('Passport: ' + skt.request.session.passport);
+	}
+
 	data = {
 		text: '<b style="color: green">The word was ' + word + '</b>',
 		displayname: false,
@@ -264,6 +283,7 @@ var endTurn = function() {
 
 io.sockets.on('connection', function(socket) {
     socket.on('enterGame', function(enterData) {
+		//console.log("User id: " + socket.request.session.passport.user);
         socket.emit('enterGame', {});
 
         sockets[socket.id] = socket;
@@ -292,11 +312,13 @@ io.sockets.on('connection', function(socket) {
             drawpoints = [{
 				type: 'clear',
 			}];
+			alldrawpoints = [];
         });
         socket.on('undo', function(data) {
 			drawpoints.push({
 				type: 'undo',
 			});
+			// TODO edit alldrawpoints to undo it
 		});
 		socket.on('wordchoice', function(data) {
 			if(choosingWord && drawerId == socket.id && (data >= 0 && data < wordChoices.length)) {
