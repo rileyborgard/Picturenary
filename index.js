@@ -116,6 +116,7 @@ const wordChoiceTime = 8000;
 
 var sockets = {};
 var place = {};
+var newuser = {};
 
 var updateWord = false;
 var word = "";
@@ -151,6 +152,7 @@ var onDisconnect = function(socket) {
 	players.splice(place[socket.id], 1);
 	delete sockets[socket.id];
 	delete place[socket.id];
+	delete newuser[socket.id];
 
 	// update places based on shifting
 	for(var i in players) {
@@ -289,6 +291,7 @@ io.sockets.on('connection', function(socket) {
 
         sockets[socket.id] = socket;
 		place[socket.id] = players.length;
+		newuser[socket.id] = true;
 
 		if(enterData.name) {
 			players.push(Player(socket.id, sanitize(enterData.name)));
@@ -373,7 +376,12 @@ setInterval(function() {
 			allGuessed = false;
 	        socket.emit('messages', messageData);
 		}
-        socket.emit('drawing', drawData);
+		if(newuser[id]) {
+			socket.emit('drawing', alldrawpoints);
+			newuser[id] = false;
+		}else {
+	        socket.emit('drawing', drawData);
+		}
         if(updatePlayers) {
             socket.emit('players', {
                 players: players,
