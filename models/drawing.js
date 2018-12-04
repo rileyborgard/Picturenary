@@ -1,10 +1,7 @@
 var mongoose = require('mongoose');
 
 var DrawingSchema = mongoose.Schema({
-    userid: {
-        type: String,
-        index: true,
-    },
+    userid: String,
     points: [{
         type: {type: String},
         x: Number,

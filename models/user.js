@@ -15,6 +15,9 @@ var UserSchema = mongoose.Schema({
     displayname: {
         type: String,
     },
+    drawings: [{
+        type: String,
+    }],
 });
 
 var User = mongoose.model('User', UserSchema);
@@ -42,6 +45,17 @@ User.comparePassword = function(candidatePassword, hash, callback) {
 		if(err) throw err;
 		callback(null, isMatch);
 	});
+}
+
+User.addDrawing = function(userId, newDrawing, callback) {
+    User.getUserById(userId, function(err, user) {
+        if(err) {
+            throw err;
+        }else if(user) {
+            user.drawings.push(newDrawing._id);
+            user.save(callback);
+        }
+    });
 }
 
 module.exports = User;
