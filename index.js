@@ -319,7 +319,14 @@ io.sockets.on('connection', function(socket) {
 			drawpoints.push({
 				type: 'undo',
 			});
-			// TODO edit alldrawpoints to undo it
+			// edit alldrawpoints to undo it
+			var j = alldrawpoints.length - 1;
+			for(; j >= 0; j--) {
+				if(alldrawpoints[j].type != 'drag') {
+					break;
+				}
+			}
+			alldrawpoints.splice(j);
 		});
 		socket.on('wordchoice', function(data) {
 			if(choosingWord && drawerId == socket.id && (data >= 0 && data < wordChoices.length)) {
