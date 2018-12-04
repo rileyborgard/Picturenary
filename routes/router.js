@@ -34,11 +34,15 @@ router.get('/profile', ensureAuthenticated, function(req, res) {
     res.render('profile', {layout: 'menulayout'});
 });
 router.get('/drawing', ensureAuthenticated, function(req, res) {
-	console.log('drawing requested by: ' + req.user._id);
+	//console.log('drawing requested by: ' + req.user._id);
 	Drawing.getDrawingByUserId(req.user._id, function(err, drawing1) {
 		if(err) {
 			throw err;
+		}else if(!drawing1) {
+			//console.log('No drawing found');
+			res.sendStatus(204);
 		}else {
+			//console.log('sending drawing');
 			res.send(drawing1);
 		}
 	});

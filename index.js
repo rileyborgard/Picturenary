@@ -270,7 +270,7 @@ var endTurn = function() {
 			}
 		});
 	}else {
-		console.log('Passport: ' + skt.request.session.passport);
+		//console.log('Passport: ' + skt.request.session.passport);
 	}
 
 	data = {

@@ -9,7 +9,7 @@ var DrawingSchema = mongoose.Schema({
         type: {type: String},
         x: Number,
         y: Number,
-        thickness: String,
+        lineWidth: String,
         color: String,
     }],
 });

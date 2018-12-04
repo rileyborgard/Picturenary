@@ -3,5 +3,11 @@
     	<h2>Profile</h2>
     	<p>Username: <span class="username-span">{{user.username}}</span></p>
     	<p>E-mail: {{user.email}}</p>
+        <div style="position: relative;">
+            <canvas id="c" width="450" height="450"></canvas>
+            <center id="wordchoicebox"></center>
+        </div>
     </div>
+
+    <script src="client/profiledraw.js"></script>
 {{/if}}
