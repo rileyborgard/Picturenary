@@ -140,6 +140,15 @@ canvas {
     background: #ccccff;
 }
 
+.scrollbutton {
+    cursor: pointer;
+    outline: none;
+    border: solid black 2px;
+    border-radius: 4px;
+    padding: 5px;
+    background: #44ccff;
+    color: black;
+}
 .imgbutton {
     outline: none;
     border: solid black 2px;
