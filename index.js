@@ -232,9 +232,11 @@ var beginTurn = function() {
 	}
 
 	// choose random word
-	for(var i in wordChoices) {
-		wordChoices[i] = dict[Math.floor(Math.random() * dict.length)];
-	}
+
+	wordChoices[0] = dict[Math.floor(Math.random() * dict.length)];
+	do { wordChoices[1] = dict[Math.floor(Math.random() * dict.length)]; }while(wordChoices[1] == wordChoices[0]);
+	do { wordChoices[2] = dict[Math.floor(Math.random() * dict.length)]; }while(wordChoices[2] == wordChoices[0] || wordChoices[2] == wordChoices[1]);
+
 	sockets[drawerId].emit('wordchoices', wordChoices);
 
 	choosingWord = true;
