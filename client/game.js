@@ -11,6 +11,8 @@ var color = 'black';
 var colors = ['black', 'white', 'red', 'yellow', 'green', 'blue'];
 var colorButtons = ['blackbutton', 'whitebutton', 'redbutton', 'yellowbutton', 'greenbutton', 'bluebutton'];
 
+const drawTimeSec = 80;
+
 var turnDate = new Date();
 var timerOffset = 10000;
 
@@ -113,7 +115,7 @@ var chooseWord = function(idx) {
 
 // updating things that cannot be triggered by an event
 function update() {
-    var secs = Math.round(Math.max(20 - timerOffset - (new Date() - turnDate) / 1000, 0));
+    var secs = Math.round(Math.max(drawTimeSec - timerOffset - (new Date() - turnDate) / 1000, 0));
     document.getElementById("timerbox").innerHTML = secs;
 }
 
@@ -220,6 +222,9 @@ c.addEventListener('mouseup', function(e) {
 c.addEventListener('mouseleave', function(e) {
     mousedown = false;
 });
+c.addEventListener('touchend', function(e) {
+    mousedown = false;
+});
 
 c.addEventListener('mousedown', function(e) {
     mousedown = true;
@@ -235,10 +240,43 @@ c.addEventListener('mousedown', function(e) {
         });
     }
 });
+c.addEventListener('touchstart', function(e) {
+    mousedown = true;
+    var touch = e.touches[0];
+    var rect = c.getBoundingClientRect();
+    var mx = 1.0 * (touch.clientX - rect.left) / c.width;
+    var my = 1.0 * (touch.clientY - rect.top) / c.height;
+    if(socket) {
+    socket.emit('draw', {
+            type: 'click',
+            x: mx,
+            y: my,
+            thickness: thickness,
+            color: color,
+        });
+    }
+});
 c.addEventListener('mousemove', function(e) {
     if(mousedown) {
         var mx = 1.0 * e.offsetX / c.width;
         var my = 1.0 * e.offsetY / c.height;
+        if(socket) {
+        socket.emit('draw', {
+                type: 'drag',
+                x: mx,
+                y: my,
+                thickness: thickness,
+                color: color,
+            });
+        }
+    }
+});
+c.addEventListener('touchmove', function(e) {
+    if(mousedown) {
+        var touch = e.touches[0];
+        var rect = c.getBoundingClientRect();
+        var mx = 1.0 * (touch.clientX - rect.left) / c.width;
+        var my = 1.0 * (touch.clientY - rect.top) / c.height;
         if(socket) {
         socket.emit('draw', {
                 type: 'drag',

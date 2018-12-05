@@ -209,7 +209,8 @@ canvas {
     border: solid #666 2px;
     border-radius: 5px;
     width:94%;
-    height: 25px;
+    height: 40px;
+    font-size: 24px;
     box-sizing: border-box;
     margin:3%;
 }

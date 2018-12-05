@@ -110,7 +110,7 @@ for(var i = 0; i < dict.length; i++) {
 }
 
 // 20 seconds
-const drawTime = 20000;
+const drawTime = 80000;
 const maxMessage = 200;
 const wordChoiceTime = 8000;
 
