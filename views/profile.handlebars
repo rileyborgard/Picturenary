@@ -1,16 +1,18 @@
 {{#if user}}
     <p hidden id="lengthhidden">{{user.drawings.length}}</p>
     <div id="profilebox">
-    	<h2>Profile</h2>
+    	<h1>Profile</h1>
     	<p>Username: <span class="username-span">{{user.username}}</span></p>
     	<p>E-mail: {{user.email}}</p>
 
+        <h1>Drawings</h1>
         <div>
             <input class="scrollbutton" id="scrollleftbutton" type="button" value="<" />
             <div style="display: inline-block" id="scrollnumber"></div>
             <input class="scrollbutton" id="scrollrightbutton" type="button" value=">" />
         </div>
         <br>
+        <b><center id="word"></center></b>
         <div style="position: relative; display: inline-block;">
             <canvas id="c" width="450" height="450"></canvas>
             <center id="wordchoicebox"></center>

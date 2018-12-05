@@ -267,7 +267,7 @@ var endTurn = function() {
 	// save drawing to database
 	var skt = sockets[drawerId];
 	if(skt.request.session.passport != null && alldrawpoints.length > 1) {
-		Drawing.createDrawing(skt.request.session.passport.user, alldrawpoints, function(err, draw1) {
+		Drawing.createDrawing(skt.request.session.passport.user, word, alldrawpoints, function(err, draw1) {
 			if(err) {
 				throw err;
 			}else {

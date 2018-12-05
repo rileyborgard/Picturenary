@@ -9,10 +9,20 @@ var length = document.getElementById("lengthhidden").innerHTML;
 var scrollnumber = document.getElementById('scrollnumber');
 scrollnumber.innerHTML = "" + (index + 1) + "/" + length;
 
+var wcbox = document.getElementById('wordchoicebox');
+
 ctx.fillStyle = "#fff";
 ctx.fillRect(0, 0, c.width, c.height);
 
 var loadDrawing = function() {
+    // clear canvas while it's loading
+    ctx.fillStyle = "#fff";
+    ctx.fillRect(0, 0, c.width, c.height);
+
+    wcbox.innerHTML = 'Loading...';
+    wcbox.style.display = 'block';
+    wcbox.style.lineHeight = "" + c.height + "px";
+
     var xhr = new XMLHttpRequest();
 
     xhr.onreadystatechange = function () {
@@ -20,12 +30,14 @@ var loadDrawing = function() {
 
         //console.log('status: ' + xhr.status);
         if(this.status == 204) {
-            var wcbox = document.getElementById('wordchoicebox');
             wcbox.innerHTML = 'Drawing not found';
             wcbox.style.display = 'block';
             wcbox.style.lineHeight = "" + c.height + "px";
         }else if (this.status == 200) {
+            wcbox.style.display = 'none';
+
             var data = JSON.parse(this.responseText);
+            document.getElementById('word').innerHTML = data.word;
             drawPoints = data.points;
 
             // draw to canvas

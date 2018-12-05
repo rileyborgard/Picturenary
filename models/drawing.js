@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
 
 var DrawingSchema = mongoose.Schema({
     userid: String,
+    word: String,
     points: [{
         type: {type: String},
         x: Number,
@@ -23,9 +24,10 @@ Drawing.getDrawingById = function(drawingid, callback) {
     Drawing.findOne(query, callback);
 }
 
-Drawing.createDrawing = function(userId, drawpoints, callback) {
+Drawing.createDrawing = function(userId, word, drawpoints, callback) {
     var drawing = new Drawing({
         userid: userId,
+        word: word,
         points: drawpoints,
     });
     drawing.save(callback);
