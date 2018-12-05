@@ -36,6 +36,7 @@ var enterGame = function() {
                     data[i].text = '<span style="color:#008800">' + data[i].text + '</span>';
                 }
                 messageBox.innerHTML += data[i].text + "<br>";
+                messageBox.scrollTop = messageBox.scrollHeight;
             }
         });
         socket.on('drawing', function(data) {
